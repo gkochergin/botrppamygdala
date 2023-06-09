@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Telegram bot - Amygdala RPP Bot'
 
     logging.basicConfig(
-        level=logging.DEBUG, filename='bot_app/logs/bot_debug.log',
+        level=logging.DEBUG, filename='api/logs/bot_debug.log',
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
     )
 

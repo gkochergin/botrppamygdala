@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bot_app', '0007_botadmins_reg_date_alter_user_reg_date_and_more'),
+        ('api', '0007_botadmins_reg_date_alter_user_reg_date_and_more'),
     ]
 
     operations = [
@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='usermessage',
             name='user_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bot_app.user', verbose_name='Telegram ID'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.user', verbose_name='Telegram ID'),
         ),
     ]

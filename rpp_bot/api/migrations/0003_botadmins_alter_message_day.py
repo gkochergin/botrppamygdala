@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bot_app', '0002_alter_message_content_type'),
+        ('api', '0002_alter_message_content_type'),
     ]
 
     operations = [

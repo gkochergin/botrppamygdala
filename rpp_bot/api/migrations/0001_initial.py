@@ -34,8 +34,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('sent_at', models.DateTimeField()),
-                ('message_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bot_app.message')),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bot_app.user')),
+                ('message_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.message')),
+                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.user')),
             ],
         ),
     ]

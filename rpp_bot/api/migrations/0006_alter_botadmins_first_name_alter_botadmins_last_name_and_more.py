@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bot_app', '0005_alter_user_reg_date'),
+        ('api', '0005_alter_user_reg_date'),
     ]
 
     operations = [
