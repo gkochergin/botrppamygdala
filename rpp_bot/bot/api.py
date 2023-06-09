@@ -32,4 +32,3 @@ def get_messages_by_day(day: int) -> list:
     response = requests.get(url=url, params=param).json()
     return response
 
-

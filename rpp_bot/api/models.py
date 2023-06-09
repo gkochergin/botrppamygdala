@@ -1,3 +1,5 @@
+from tokenize import tokenize
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -49,7 +51,7 @@ class Message(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(12)],
         verbose_name='Sending day',
         help_text='Номер дня по счету от даты регистрации, когда отправить сообщение')
-    ordinal_number = models.IntegerField(help_text='Порядковый номер отправки (уникальный)')
+    ordinal_number = models.IntegerField(help_text='Порядковый номер отправки (уникальный)', default=1)
     content_type = models.CharField(max_length=3, choices=CONTENT_TYPES, default=TEXT)
     content = models.TextField()
 
