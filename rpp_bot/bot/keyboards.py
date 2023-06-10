@@ -20,3 +20,11 @@ def make_row_keyboard(items: list[str], row_size=int) -> ReplyKeyboardMarkup:
     return kb.as_markup(resize_keyboard=True)
 
 
+def back_next():
+    keyboard = InlineKeyboardBuilder()
+    back_button = InlineKeyboardButton(text="Назад", callback_data="back")
+    next_button = InlineKeyboardButton(text="Далее", callback_data="next")
+    # buttons = [InlineKeyboardButton(text="Назад", callback_data="back"),
+    #     InlineKeyboardButton(text="Далее", callback_data="next")]
+    keyboard.add(back_button, next_button)
+    return keyboard.as_markup()

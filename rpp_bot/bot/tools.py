@@ -5,6 +5,7 @@ from nltk.tokenize import sent_tokenize
 
 nltk.download('punkt')
 
+
 def error_logger(func):
     def wrapper(*args, **kwargs):
         try:
@@ -55,8 +56,7 @@ def split_text_by_paragraphs(text, max_length) -> list[str] | None:
         return result
 
 
-
-def split_text_by_sentences(text, max_length):
+def split_text_by_sentences(text: str, max_length: int):
     text = text.strip()
     sentences = sent_tokenize(text)
     result = []
@@ -73,3 +73,13 @@ def split_text_by_sentences(text, max_length):
         result.append(' '.join(current_part))
     return result
 
+
+def convert_response_dict_string(response: list) -> str:
+    result = ''
+    if response:
+        content_list = []
+        for dictionary in response:
+            if dictionary['content_type'] == 'TXT':
+                content_list.append(dictionary['content'])
+        result = '\n\n'.join(content_list)
+    return result

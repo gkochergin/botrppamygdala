@@ -1,9 +1,19 @@
 from aiogram import Router, types, F
 from aiogram.filters import Command
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 import rpp_bot.bot.api as api
+import tools as tls
+import keyboards as kb
 
 # назначаем роутер
 router = Router()
+
+# global variables
+global text_part_num
+global text_parts
+global active_day
 
 
 @router.message(Command(commands=["start"]))
@@ -21,8 +31,9 @@ async def command_day_handler(message: types.Message) -> None:
 
     @router.message(F.text)
     async def get_days_and_sent_to_chat(message: types.Message):
-        day_num = int(message.text.strip())
-        response = api.get_messages_by_day(day=day_num)
+        global active_day
+        active_day = int(message.text.strip())
+        response = api.get_messages_by_day(day=active_day)
         if response:
             content_list = []
             for dictionary in response:
@@ -32,27 +43,54 @@ async def command_day_handler(message: types.Message) -> None:
             result = '\n\n'.join(content_list)
             await message.answer(f"Сообщения выводятся в порядке от первого к последнему:\n\n{result}")
         else:
-            await message.answer(f"Сообщений за день <b>{day_num}</b> не найдено.")
+            await message.answer(f"Сообщений за день <b>{active_day}</b> не найдено.")
+
+
+@router.message(Command(commands=['textpages']))
+async def command_textpages_handler(message: types.Message) -> None:
+    global text_part_num
+    global text_parts
+    global active_day
+
+    # получаем данные от сервера
+    response = api.get_messages_by_day(day=active_day)
+
+    # превращаем ответ сервера в строку
+    response_string = tls.convert_response_dict_string(response)
+
+    # разбиваем строку на элементы определенной длины
+    text_parts = tls.split_text_by_sentences(text=response_string, max_length=100)
+
+    # выбираем первый кусок текста и форматируем сообщение для отправки
+    text_part_num = 0
+    message_text = text_parts[0] + f"\n\nСтраница {1} из {len(text_parts)}"
+
+    # отправляем сообщение пользователю с клавиатурой
+    await message.answer(message_text, reply_markup=kb.back_next())
 
 
 @router.callback_query(lambda c: c.data == 'back' or c.data == 'next')
-async def process_callback(callback_query: types.CallbackQuery):
-    global current_part
+async def back_next_callback(callback_query: types.CallbackQuery) -> None:
+    global text_part_num
+    global text_parts
+
+    # counting total text parts
+    total_text_parts = len(text_parts)
+
+    # pagination logic
     if callback_query.data == 'back':
-        if current_part > 0:
-            current_part -= 1
-    elif callback_query.data == 'next':
-        if current_part < len(text_parts) - 1:
-            current_part += 1
+        if text_part_num > 0:
+            text_part_num -= 1
         else:
-            current_part = 0
+            text_part_num = total_text_parts - 1
+    elif callback_query.data == 'next':
+        if text_part_num < total_text_parts - 1:
+            text_part_num += 1
+        else:
+            text_part_num = 0
 
-    # Изменение текста кнопки "Далее" на "Начало"
-    if current_part == len(text_parts) - 1:
-        next_button.text = "Начало"
-    else:
-        next_button.text = "Далее"
+    # выбираем кусок текста по его номеру в списке и форматируем сообщение для отправки
+    message_text = text_parts[text_part_num] + f"\n\nСтраница {text_part_num + 1} из {total_text_parts}"
 
-    await bot.edit_message_text(text_parts[current_part], callback_query.message.chat.id,
-                                callback_query.message.message_id, reply_markup=keyboard)
-    await bot.answer_callback_query(callback_query.id)
+    await callback_query.message.edit_text(text=message_text, reply_markup=kb.back_next())
+    await callback_query.answer(show_alert=False)
