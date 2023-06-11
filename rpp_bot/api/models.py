@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class BotAdmins(models.Model):
-    user_id = models.CharField(max_length=20, primary_key=True, unique=True)
+    user_id = models.BigIntegerField(primary_key=True, unique=True)
     reg_date = models.DateTimeField(auto_now=True, verbose_name='Registration date')
     first_name = models.CharField(max_length=30, blank=True, help_text='Имя пользователя')
     last_name = models.CharField(max_length=30, blank=True, help_text='Фамилия пользователя')
@@ -18,10 +18,10 @@ class BotAdmins(models.Model):
 
 
 class User(models.Model):
-    user_id = models.CharField(verbose_name='Telegram ID', max_length=20, primary_key=True, unique=True)
+    user_id = models.BigIntegerField(verbose_name='Telegram ID', primary_key=True, unique=True)
     username = models.CharField(max_length=255, blank=False, default='')
     reg_date = models.DateTimeField(
-        auto_now=True,
+        auto_now_add=True,
         editable=False,
         verbose_name='Registration date',
         help_text='Дата первой активации бота')
@@ -60,11 +60,10 @@ class Message(models.Model):
 
 
 class UserMessage(models.Model):
-    user_id = models.ForeignKey(to='api.User', on_delete=models.CASCADE, verbose_name='Telegram ID')
-    message_id = models.ForeignKey(Message, on_delete=models.CASCADE, editable=False)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Telegram ID')
+    message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
     sent_at = models.DateTimeField(
         verbose_name='Sending date & time',
-        editable=False,
         help_text='Дата, когда было отправлено сообщение')
 
     def __str__(self):

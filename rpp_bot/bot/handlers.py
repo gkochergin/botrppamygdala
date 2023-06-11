@@ -1,8 +1,8 @@
+from datetime import datetime
 from aiogram import Router, types, F
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-
 import rpp_bot.bot.api as api
 import tools as tls
 import keyboards as kb
@@ -16,14 +16,31 @@ global text_parts
 global active_day
 
 
+def record_message_event(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            with open('error.log', 'a') as f:
+                f.write(f'Error: {e}\n')
+            raise
+
+    return wrapper
+
+
+
 @router.message(Command(commands=["start"]))
 async def command_start_handler(message: types.Message) -> None:
     messages_list = api.get_messages_by_day(day=0)
-    await message.answer(f'Hello, <b>{message.from_user.full_name}</b>')
-    await message.answer(messages_list[0]['content'])
-    api.create_user(user_id=str(message.from_user.id), username=message.from_user.username, reg_date=str(message.date),
-                    timezone='UTC')
 
+    await message.answer(messages_list[0]['content'])
+    api.record_sent_message_event(user_id=message.from_user.id, message_id=1, sent_at=datetime.now())
+    api.create_user(
+        user_id=str(message.from_user.id),
+        username=message.from_user.username,
+        timezone='UTC')
+
+# В БД НЕ СОХРАНЯЮТСЯ СМАЙЛИКИ!!!!!!!!!!!!!!!!!
 
 @router.message(Command(commands=['day']))
 async def command_day_handler(message: types.Message) -> None:

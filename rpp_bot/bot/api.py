@@ -1,22 +1,16 @@
 import requests
-import datetime
+from datetime import datetime
 import json
 
 BASE_URL = 'http://localhost:8000/api/v1'
 
 
-def create_user(user_id: str, username: str, reg_date: str, timezone: str):
+def create_user(user_id: str, username: str, timezone: str):
     url = f'{BASE_URL}/bot-users'
-    param = {'user_id': user_id}
-    response = requests.get(url=url).json()
-    user_exists = any(i['user_id'] == user_id for i in response)
-    if not user_exists:
-        # для post нужен словарь а-ля json
-        data_post = {'user_id': user_id, 'username': username, 'reg_date': reg_date, 'timezone': timezone}
-        requests.post(url=url, json=data_post)
-        return f"Пользователь {user_id} создан."
-    else:
-        return f"Пользователь {user_id} существует."
+    user_data = {'user_id': user_id, 'username': username, 'timezone': timezone}
+    requests.post(url=url, data=user_data)
+
+    return 'Событие Create User завершено.'
 
 
 def record_sent_message_event(user_id, message_id, sent_at):
@@ -32,3 +26,7 @@ def get_messages_by_day(day: int) -> list:
     response = requests.get(url=url, params=param).json()
     return response
 
+
+def save_user_timezone(user_id: str) -> None:
+    # нужно будет сделать апдейт поля timezone конкретного юзера в базе данных
+    pass

@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ("user_id", "username", "reg_date", "timezone")
+        fields = ("user_id", "reg_date", "username", "timezone")
 
 
 class UserMessageSerializer(ModelSerializer):

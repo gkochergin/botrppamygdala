@@ -94,6 +94,7 @@ DATABASES = {
         "USER": cr.config.db_user.get_secret_value(),
         "PASSWORD": cr.config.db_pass.get_secret_value(),
         "HOST": "",
+        "OPTIONS": {'charset': 'utf8mb4'}
     }
 }
 
@@ -116,6 +117,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'server_debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
