@@ -10,8 +10,10 @@ router = Router()
 
 # global variables
 global text_parts
+global text_part_num
 
 BTN_DAYS_LIST = [f'Day {i}' for i in range(0, 13)]
+BTN_BACK_NEXT = ['back', 'next']
 
 
 def record_message_event(func):
@@ -52,34 +54,43 @@ async def command_day_handler(message: types.Message) -> None:
 @router.message(F.text.in_(BTN_DAYS_LIST))
 async def get_days_and_sent_to_chat(message: types.Message):
     global text_parts
+    global text_part_num
 
     selected_day = int(message.text.removeprefix("Day "))
 
     # получаем данные от сервера
     response = api.get_messages_by_day(day=selected_day)
 
-    # превращаем ответ сервера в строку
-    response_string = tls.convert_response_dict_to_string(response)
+    if response:
+        # превращаем ответ сервера в строку
+        response_string = tls.convert_response_dict_to_string(response)
 
-    # разбиваем строку на элементы определенной длины
-    text_parts = tls.split_text_to_parts(text=response_string, part_length=800)
+        # разбиваем строку на элементы определенной длины
+        text_parts = tls.split_text_to_parts(text=response_string, part_length=800)
 
-    # выбираем первый кусок текста и форматируем сообщение для отправки
-    if len(text_parts) == 1:
-        message_text = text_parts[0]
+        # выбираем первый кусок текста и форматируем сообщение для отправки
+        if len(text_parts) == 1:
+            message_text = text_parts[0]
+            await message.answer(message_text)
+        else:
+            text_part_num = 0
+            message_text = text_parts[text_part_num] + f"\n\nСтраница {1} из {len(text_parts)}"
+            await message.answer(message_text, reply_markup=kb.back_next())
     else:
-        message_text = text_parts[0] + f"\n\nСтраница {1} из {len(text_parts)}"
-
-    # отправляем сообщение пользователю с клавиатурой
-    await message.answer(message_text, reply_markup=kb.back_next())
+        message_text = "Сообщений за этот день не найдено"
+        await message.answer(message_text)
 
 
-@router.callback_query(F.data.in_(['back', 'next']))
+@router.callback_query(lambda c: c.data == 'back' or c.data == 'next')
 async def back_next_callback(callback_query: types.CallbackQuery) -> None:
+    print("Мы внутри функции back_next_callback")
+    print('Callback query data:', callback_query.data)
     global text_parts
-    text_part_num = 0
+    global text_part_num
+
     # counting total text parts
     total_text_parts = len(text_parts)
+    print(f'total_text_parts = {total_text_parts}')
 
     # pagination logic
     if callback_query.data == 'back':
@@ -90,10 +101,11 @@ async def back_next_callback(callback_query: types.CallbackQuery) -> None:
     elif callback_query.data == 'next':
         if text_part_num < total_text_parts - 1:
             text_part_num += 1
-        else:
+        elif text_part_num == total_text_parts - 1 :
             text_part_num = 0
-
+    print('Expected text part number:', text_part_num)
     # выбираем кусок текста по его номеру в списке и форматируем сообщение для отправки
+    print('Selected text part:', text_parts[text_part_num][:300])
     message_text = text_parts[text_part_num] + f"\n\nСтраница {text_part_num + 1} из {total_text_parts}"
 
     await callback_query.message.edit_text(text=message_text, reply_markup=kb.back_next())

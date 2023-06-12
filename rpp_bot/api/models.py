@@ -68,3 +68,14 @@ class UserMessage(models.Model):
 
     def __str__(self):
         return f'Message sent to user_id={self.user_id} at time={self.sent_at}'
+
+
+class QuizQuestions(models.Model):
+    question = models.CharField(max_length=255)
+
+
+class QuizResults(models.Model):
+    # Хранятся все результаты для всех тестов ?
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Telegram ID')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Quiz date', help_text='Дата прохождения квиза')
+    result = models.IntegerField()
