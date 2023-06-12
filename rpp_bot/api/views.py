@@ -1,9 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, ListAPIView, CreateAPIView
-from .serializers import UserSerializer, UserMessageSerializer, MessageSerializer, BotAdminsSerializer
+from .serializers import (
+    UserSerializer, UserMessageSerializer, MessageSerializer, BotAdminsSerializer,
+    QuizResultsSerializer, QuizQuestionsSerializer )
 
-from .models import User, UserMessage, Message, BotAdmins
+from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizResults
 
 
 class UserApiView(ListCreateAPIView):
@@ -57,4 +59,13 @@ class BotAdminsApiView(ListCreateAPIView):
     serializer_class = BotAdminsSerializer
 
 
+
+class QuizResultsApiView(ListCreateAPIView):
+    queryset = QuizResults.objects.all()
+    serializer_class = QuizResultsSerializer
+
+
+class QuizQuestionsApiView(ListAPIView):
+    queryset = QuizQuestions.objects.all()
+    serializer_class = QuizQuestionsSerializer
 
