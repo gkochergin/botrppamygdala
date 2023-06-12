@@ -15,6 +15,8 @@ global text_part_num
 global text_parts
 global active_day
 
+active_day: int = -1
+
 
 def record_message_event(func):
     def wrapper(*args, **kwargs):
@@ -28,7 +30,6 @@ def record_message_event(func):
     return wrapper
 
 
-
 @router.message(Command(commands=["start"]))
 async def command_start_handler(message: types.Message) -> None:
     messages_list = api.get_messages_by_day(day=0)
@@ -40,11 +41,17 @@ async def command_start_handler(message: types.Message) -> None:
         username=message.from_user.username,
         timezone='UTC')
 
-# В БД НЕ СОХРАНЯЮТСЯ СМАЙЛИКИ!!!!!!!!!!!!!!!!!
 
-@router.message(Command(commands=['day']))
+@router.message(Command(commands=['admindays']))
 async def command_day_handler(message: types.Message) -> None:
-    await message.answer('Sent me a day number (f.e. "0"):')
+    i = 0
+    btn_list = []
+    while i <= 12:
+        btn_name = f"Day {i}"
+        btn_list.append(btn_name)
+        i += 1
+    print(btn_list)
+    await message.answer('Выберите нужный день', reply_markup=kb.make_row_keyboard(btn_list, row_size=5))
 
     @router.message(F.text)
     async def get_days_and_sent_to_chat(message: types.Message):
@@ -55,10 +62,10 @@ async def command_day_handler(message: types.Message) -> None:
             content_list = []
             for dictionary in response:
                 concat = 'Message ' + dictionary['ordinal_number'].__str__() + ' > Type: ' + dictionary[
-                    'content_type'] + '\n<b>Content:</b>\n' + dictionary['content']
+                    'content_type'] + '\n<b>Content:</b>\n' + dictionary['content'][:1000] + '...'
                 content_list.append(concat)
             result = '\n\n'.join(content_list)
-            await message.answer(f"Сообщения выводятся в порядке от первого к последнему:\n\n{result}")
+            await message.answer(f"Сообщения выводятся в порядке от первого к последнему:\n\n{result}\n\n/textpages")
         else:
             await message.answer(f"Сообщений за день <b>{active_day}</b> не найдено.")
 
@@ -69,14 +76,17 @@ async def command_textpages_handler(message: types.Message) -> None:
     global text_parts
     global active_day
 
+    # if active_day == -1:
+    #     await command_day_handler(message=message)
+
     # получаем данные от сервера
     response = api.get_messages_by_day(day=active_day)
 
     # превращаем ответ сервера в строку
-    response_string = tls.convert_response_dict_string(response)
+    response_string = tls.convert_response_dict_to_string(response)
 
     # разбиваем строку на элементы определенной длины
-    text_parts = tls.split_text_by_sentences(text=response_string, max_length=100)
+    text_parts = tls.split_text_to_parts(text=response_string, part_length=800)
 
     # выбираем первый кусок текста и форматируем сообщение для отправки
     text_part_num = 0

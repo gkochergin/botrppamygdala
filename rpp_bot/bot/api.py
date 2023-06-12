@@ -26,6 +26,12 @@ def get_messages_by_day(day: int) -> list:
     response = requests.get(url=url, params=param).json()
     return response
 
+def get_messages_by_day_and_type(day: int, type: str) -> list:
+    url = f'{BASE_URL}/messages'
+    param = {'day': day, 'type':type}
+    response = requests.get(url=url, params=param).json()
+    return response
+
 
 def save_user_timezone(user_id: str) -> None:
     # нужно будет сделать апдейт поля timezone конкретного юзера в базе данных

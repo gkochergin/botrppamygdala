@@ -1,12 +1,15 @@
-pydantic
+pydantic==1.10.9
 python-dotenv
 # django and it's extensions
-Django
+Django~=4.2.2
 django-debug-toolbar
 django-extensions
 mysqlclient==2.1.1
 # aiogram module from dev-3.x branch
-https://github.com/aiogram/aiogram/archive/refs/heads/dev-3.x.zip
+aiogram~=3.0.0b8
 djangorestframework~=3.14.0
-SQLAlchemy~=2.0.15
+SQLAlchemy==2.0.16
 requests~=2.31.0
+nltk~=3.8.1
+tqdm~=4.65.0
+moviepy~=1.0.3
