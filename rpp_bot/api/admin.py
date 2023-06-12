@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, UserMessage, Message, BotAdmins
+from .models import User, UserMessage, Message, BotAdmins, QuizResults, QuizQuestions
 
 # Register your models here.
 
@@ -7,7 +7,8 @@ from .models import User, UserMessage, Message, BotAdmins
 admin.site.register(User)
 admin.site.register(UserMessage)
 admin.site.register(BotAdmins)
-
+admin.site.register(QuizResults)
+admin.site.register(QuizQuestions)
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):

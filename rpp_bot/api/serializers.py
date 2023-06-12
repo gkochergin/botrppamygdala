@@ -1,4 +1,4 @@
-from .models import User, UserMessage, Message, BotAdmins
+from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizResults
 from rest_framework.serializers import ModelSerializer
 
 
@@ -24,3 +24,15 @@ class BotAdminsSerializer(ModelSerializer):
     class Meta:
         model = BotAdmins
         fields = ("user_id", "reg_date", "first_name", "last_name", "username")
+
+
+class QuizQuestionsSerializer(ModelSerializer):
+    class Meta:
+        model = QuizQuestions
+        fields = ("question", )
+
+
+class QuizResultsSerializer(ModelSerializer):
+    class Meta:
+        model = QuizResults
+        fields = ("user_id", "date", "result")
