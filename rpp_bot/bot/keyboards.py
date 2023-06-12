@@ -3,7 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 
 # генератор обычной клавиатуры
-def make_row_keyboard(items: list[str], row_size=int) -> ReplyKeyboardMarkup:
+def make_row_keyboard(items: list[str], row_size=int, *args, **kwargs) -> ReplyKeyboardMarkup:
     """
     Создаёт реплай-клавиатуру с кнопками в один или несколько рядов
     :type row_size: int
@@ -17,7 +17,7 @@ def make_row_keyboard(items: list[str], row_size=int) -> ReplyKeyboardMarkup:
         kb.row(b)
     kb = kb.adjust(row_size)
 
-    return kb.as_markup(resize_keyboard=True)
+    return kb.as_markup(resize_keyboard=True, **kwargs)
 
 
 def back_next():
