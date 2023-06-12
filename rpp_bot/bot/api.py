@@ -26,9 +26,10 @@ def get_messages_by_day(day: int) -> list:
     response = requests.get(url=url, params=param).json()
     return response
 
+
 def get_messages_by_day_and_type(day: int, type: str) -> list:
     url = f'{BASE_URL}/messages'
-    param = {'day': day, 'type':type}
+    param = {'day': day, 'type': type}
     response = requests.get(url=url, params=param).json()
     return response
 
@@ -36,3 +37,16 @@ def get_messages_by_day_and_type(day: int, type: str) -> list:
 def save_user_timezone(user_id: str) -> None:
     # нужно будет сделать апдейт поля timezone конкретного юзера в базе данных
     pass
+
+
+def get_quiz_question_list() -> dict:
+    url = f'{BASE_URL}/quiz-question'
+    response = requests.get(url).json()
+    return response
+
+
+def save_quiz_result(user_id: int, result: int):
+    url = f'{BASE_URL}/quiz-result'
+    param = {"user_id": user_id, "result": result}
+    response = requests.post(url=url, params=param).json()
+    return response
