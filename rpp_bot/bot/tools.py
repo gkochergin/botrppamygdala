@@ -1,10 +1,5 @@
-# функция декоратор для перехвата ошибок и записи в лог
 from typing import List
-import nltk
-from nltk.tokenize import sent_tokenize
 import re
-
-from rpp_bot.bot import api
 
 
 def error_logger(func):

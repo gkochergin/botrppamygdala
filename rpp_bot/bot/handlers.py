@@ -50,9 +50,10 @@ async def command_day_handler(message: types.Message) -> None:
                              one_time_keyboard=True)
                          )
 
+
 @router.callback_query(F.data.in_(btn_days_list))
-async def get_days_and_sent_to_chat(query: types.CallbackQuery):
-    selected_day = int(query.data.removeprefix(__prefix="Day "))
+async def get_days_and_sent_to_chat(callback_query: types.CallbackQuery):
+    selected_day = int(callback_query.data.removeprefix(__prefix="Day "))
     print(selected_day)
 
     # получаем данные от сервера
@@ -68,8 +69,7 @@ async def get_days_and_sent_to_chat(query: types.CallbackQuery):
     message_text = text_parts[0] + f"\n\nСтраница {1} из {len(text_parts)}"
 
     # отправляем сообщение пользователю с клавиатурой
-    await query.answer(message_text, reply_markup=kb.back_next())
-
+    await callback_query.answer(message_text, reply_markup=kb.back_next())
 
     # response = api.get_messages_by_day(day=active_day)
     # if response:
