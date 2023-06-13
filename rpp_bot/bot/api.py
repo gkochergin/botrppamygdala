@@ -13,6 +13,14 @@ def create_user(user_id: str, username: str, timezone: str):
     return 'Событие Create User завершено.'
 
 
+def get_user(user_id: str):
+    url = f'{BASE_URL}/bot-users'
+    user_data = {'user_id': user_id}
+    user = requests.get(url=url, data=user_data).json()
+    print('Событие Get User завершено.')
+    return user
+
+
 def record_sent_message_event(user_id, message_id, sent_at):
     url = f'{BASE_URL}/sent-messages'
     param = {'user_id': user_id, 'message_id': message_id, 'sent_at': sent_at}
@@ -45,15 +53,14 @@ def get_quiz_question_list() -> dict:
     return response
 
 
-def save_quiz_result(user_id: int, result: int):
+def save_quiz_result(user_id: str, result: int):
     url = f'{BASE_URL}/quiz-result'
-    param = {"user_id": user_id, "result": result}
-    response = requests.post(url=url, params=param).json()
+    data = {"user_id": str(user_id), "result": int(result)}
+    response = requests.post(url=url, json=data)
     return response
 
-a = get_quiz_question_list()
-print(a)
-print()
-print(len(a))
-for i in a:
-    print(i['question'])
+
+def get_quiz_result():
+    url = f'{BASE_URL}/quiz-result'
+    response = requests.get(url=url)
+    return response.json()

@@ -79,7 +79,7 @@ class QuizQuestions(models.Model):
 
 class QuizResults(models.Model):
     # Хранятся все результаты для всех тестов ?
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Telegram ID')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Telegram ID')
     date = models.DateTimeField(auto_now_add=True, verbose_name='Quiz date', help_text='Дата прохождения квиза')
     result = models.IntegerField()
 
