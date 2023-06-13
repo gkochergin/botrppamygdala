@@ -4,7 +4,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from rpp_bot.core.config_reader import config
-import handlers
+import handlers, quizes
 
 
 # инициализация sentry
@@ -34,6 +34,7 @@ async def main():
     print('\n', await bot.get_me(), '\n')
 
     dp.include_router(handlers.router)
+    dp.include_router(quizes.router)
 
     # Запускаем бота и пропускаем все накопленные входящие
     await bot.delete_webhook(drop_pending_updates=True)

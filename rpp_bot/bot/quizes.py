@@ -18,16 +18,14 @@ async def start_quiz(message: types.Message):
 
 async def quiz_show_question(user_id: int, question_number: int, score: int):
     message = types.Message
-    total_questions = len(api.get_quiz_question_list())
-    print(total_questions)
-    if question_number < total_questions:
-        # получаем вопрос по номеру из бд через api
-        # Question.objects.values_list('text', flat=True)[question_number]
+    questions_list = api.get_quiz_question_list()
+    questions_count = len(questions_list)
+    print(questions_count)
+    if question_number < questions_count:
         question_text = api.get_quiz_question_list()[question_number]
+        message_text = f"Вопрос {question_number + 1} из {questions_count}\n\n{question_text}"
 
-        message_text = f"Вопрос {question_number + 1} из {total_questions}\n\n{question_text}"
-
-        # создаем специальную клавиатуру
+        # создаем специальную клавиатуру с подсчетом очков и номера вопроса
         yes_btn_data = f"yes,{question_number + 1},{score + 1}"
         no_bt_data = f"no,{question_number + 1},{score}"
         buttons_list = [
@@ -44,8 +42,8 @@ async def quiz_show_question(user_id: int, question_number: int, score: int):
         else:
             result_text = "Результат ваших ответов:\nВсё плохо, надо лечиться. Обратитесь к специалисту."
         # через api создаем в бд объект с результатом прохождения теста
-        # TestResult.objects.create(user_id=user_id, result=score)
-
+        api.save_quiz_result(user_id=user_id, result=score)
+        # сообщаем пользователю результат
         await message.answer(f"Вы набрали {score} очков.\n\n{result_text}")
 
 
