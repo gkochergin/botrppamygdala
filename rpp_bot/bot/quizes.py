@@ -18,11 +18,12 @@ async def start_quiz(message: types.Message):
 
 async def quiz_show_question(user_id: int, question_number: int, score: int):
     message = types.Message
-    total_questions = None  # получаем количество всего вопросов в тесте через api
+    total_questions = len(api.get_quiz_question_list())
+    print(total_questions)
     if question_number < total_questions:
         # получаем вопрос по номеру из бд через api
         # Question.objects.values_list('text', flat=True)[question_number]
-        question_text = None
+        question_text = api.get_quiz_question_list()[question_number]
 
         message_text = f"Вопрос {question_number + 1} из {total_questions}\n\n{question_text}"
 

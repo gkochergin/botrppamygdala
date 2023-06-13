@@ -85,3 +85,4 @@ class QuizResults(models.Model):
 
     def __str__(self):
         return f"User: {self.user_id.user_id} > Quiz date: {self.date} > Result: {self.result}"
+

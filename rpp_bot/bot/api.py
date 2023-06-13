@@ -50,3 +50,10 @@ def save_quiz_result(user_id: int, result: int):
     param = {"user_id": user_id, "result": result}
     response = requests.post(url=url, params=param).json()
     return response
+
+a = get_quiz_question_list()
+print(a)
+print()
+print(len(a))
+for i in a:
+    print(i['question'])
