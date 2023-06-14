@@ -4,6 +4,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 
 import rpp_bot.bot.api as api
+
 from rpp_bot.bot import keyboards as kb
 
 router = Router()
@@ -40,6 +41,7 @@ class QuizSession:
 
 
 USER_SESSION: QuizSession
+YES_NO_KB = kb.inline_two_buttons(btn1_text="Да", btn2_text="Нет", btn1_data="yes", btn2_data="no")
 
 
 @router.message(Command(commands='myhabbits'))
@@ -59,9 +61,9 @@ async def quiz_show_question(message: types.Message, increase: int):
     question_text = USER_SESSION.get_question(increase=increase)
     message_text = f"<b>Вопрос {USER_SESSION.question_number} из {USER_SESSION.question_count}</b>\n\n{question_text}"
     if USER_SESSION.question_number > 1:
-        await message.edit_text(text=message_text, reply_markup=kb.yes_no().as_markup())
+        await message.edit_text(text=message_text, reply_markup=YES_NO_KB)
     else:
-        await message.answer(text=message_text, reply_markup=kb.yes_no().as_markup())
+        await message.answer(text=message_text, reply_markup=YES_NO_KB)
 
 
 @router.callback_query(lambda c: c.data.startswith('yes') or c.data.startswith('no'))

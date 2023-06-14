@@ -28,10 +28,10 @@ def back_next():
     return keyboard.as_markup()
 
 
-def yes_no():
+def inline_two_buttons(btn1_text: str, btn2_text: str, btn1_data: str, btn2_data: str):
     buttons_list = [
-        [InlineKeyboardButton(text="Да", callback_data="yes"),
-         InlineKeyboardButton(text="Нет", callback_data="no")]
+        [InlineKeyboardButton(text=btn1_text, callback_data=btn1_data),
+         InlineKeyboardButton(text=btn2_text, callback_data=btn2_data)]
     ]
     kb = InlineKeyboardBuilder(markup=buttons_list)
-    return kb
+    return kb.as_markup()

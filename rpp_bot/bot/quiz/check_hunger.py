@@ -3,35 +3,29 @@ from datetime import datetime
 from aiogram import Router, types
 from aiogram.filters import Command
 
-import rpp_bot.bot.api as api
 from rpp_bot.bot import keyboards as kb
+from dataclasses import dataclass
 
 router = Router()
 
 
-class QuizSession:
-    questions = api.get_quiz_question_list()
-    question_count = len(questions)
-
-    def __init__(self, user_id, score: int, question_number: int):
-        self.user_id = user_id
-        self.date_time = datetime.now()
-        self.question_number = question_number
-        self.score = score
-        self.__field_name = 'question'
-        self.finished = False
+@dataclass
+class MyHungerSession:
+    base_question = "Где ты чувствуешь голод?"
+    head_name = "Голова"
+    stomach_name = "Живот"
+    head_result = "ЛЕЧИТЬСЯ!"
+    stomach_result = "ЖРАТЬ!"
 
 
-
-USER_SESSION: QuizSession
-
+USER_SESSION: MyHungerSession
 
 @router.message(Command(commands='myhunger'))
-async def start_quiz(message: types.Message):
+async def start_hunger_test(message: types.Message):
     global USER_SESSION
 
     # инициализируем данные сессии
-    USER_SESSION = QuizSession(user_id=str(message.from_user.id), question_number=0, score=0)
+    USER_SESSION = MyHungerSession(user_id=str(message.from_user.id))
 
     # Сообщаем пользователю, что тест начат
     await message.answer("<b>Тест на наличие проблем с пищевым поведением</b>")
@@ -43,9 +37,11 @@ async def quiz_show_question(message: types.Message, increase: int):
     question_text = USER_SESSION.get_question(increase=increase)
     message_text = f"<b>Вопрос {USER_SESSION.question_number} из {USER_SESSION.question_count}</b>\n\n{question_text}"
     if USER_SESSION.question_number > 1:
-        await message.edit_text(text=message_text, reply_markup=kb.yes_no().as_markup())
+        await message.edit_text(
+            text=message_text,
+            reply_markup=YES_NO_KB)
     else:
-        await message.answer(text=message_text, reply_markup=kb.yes_no().as_markup())
+        await message.answer(text=message_text, reply_markup=kb.inline_two_buttons()))
 
 
 @router.callback_query(lambda c: c.data.startswith('yes') or c.data.startswith('no'))
