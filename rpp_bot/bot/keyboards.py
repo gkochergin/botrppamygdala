@@ -26,3 +26,12 @@ def back_next():
     next_button = InlineKeyboardButton(text=">>>>", callback_data="next")
     keyboard.add(back_button, next_button)
     return keyboard.as_markup()
+
+
+def yes_no():
+    buttons_list = [
+        [InlineKeyboardButton(text="Да", callback_data="yes"),
+         InlineKeyboardButton(text="Нет", callback_data="no")]
+    ]
+    kb = InlineKeyboardBuilder(markup=buttons_list)
+    return kb
