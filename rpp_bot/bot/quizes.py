@@ -1,25 +1,25 @@
+import logging as log
 from datetime import datetime
-from aiogram import Router, types, F
+from aiogram import Router, types
 from aiogram.filters import Command
 
 import rpp_bot.bot.api as api
 import keyboards as kb
-from dataclasses import dataclass
 
 router = Router()
-global USER_SESSION
 
 
 class QuizSession:
     questions = api.get_quiz_question_list()
     question_count = len(questions)
 
-    def __init__(self, user_id, score, question_number):
+    def __init__(self, user_id, score: int, question_number: int):
         self.user_id = user_id
         self.date_time = datetime.now()
         self.question_number = question_number
         self.score = score
         self.__field_name = 'question'
+        self.finished = False
 
     def add_one_to_score(self) -> None:
         self.score += 1
@@ -27,29 +27,19 @@ class QuizSession:
     def save_quiz_result(self) -> None:
         # через api создаем в бд объект с результатом прохождения теста
         try:
-            api.save_quiz_result(user_id=self.user_id, result=QuizSession.score)
+            api.save_quiz_result(user_id=self.user_id, result=self.score)
         except Exception as e:
+            log.error(e)
             print(e)
-        return e or None
 
-    def get_question(self) -> str:
-        if self.question_number <= QuizSession.question_count -1:
-            question = QuizSession.questions[self.question_number][self.__field_name]
-            self.question_number += 1
+    def get_question(self, increase: int) -> str:
+        if self.question_number <= self.question_count - 1:
+            question = self.questions[self.question_number][self.__field_name]
+            self.question_number += increase
             return question
-        elif self.question_number > QuizSession.question_count:
-            pass
 
 
-# def get_question(session: QuizSession):
-#     print('session.question_number:', session.question_number)
-#     print('session.question_count:', session.question_count)
-#     if session.question_number <= session.question_count - 1:
-#         question = session.questions[session.question_number]['question']
-#         session.question_number += 1
-#         return question
-#     elif session.question_number > session.question_count:
-#         return None
+USER_SESSION: QuizSession
 
 
 @router.message(Command(commands='startquiz'))
@@ -61,31 +51,43 @@ async def start_quiz(message: types.Message):
 
     # Сообщаем пользователю, что тест начат
     await message.answer("<b>Тест на наличие проблем с пищевым поведением</b>")
-    await quiz_show_question(session=USER_SESSION, message=message)
+    await quiz_show_question(message=message, increase=1)
 
 
-async def quiz_show_question(session: QuizSession, message: types.Message):
-    question_text = session.get_question()
-    message_text = f"Вопрос {session.question_number} из {session.question_count}\n\n{question_text}"
-    await message.answer(text=message_text, reply_markup=kb.yes_no().as_markup())
-    return session.question_number
+async def quiz_show_question(message: types.Message, increase: int):
+    global USER_SESSION
+    question_text = USER_SESSION.get_question(increase=increase)
+    message_text = f"<b>Вопрос {USER_SESSION.question_number} из {USER_SESSION.question_count}</b>\n\n{question_text}"
+    if USER_SESSION.question_number > 1:
+        await message.edit_text(text=message_text, reply_markup=kb.yes_no().as_markup())
+    else:
+        await message.answer(text=message_text, reply_markup=kb.yes_no().as_markup())
 
 
 @router.callback_query(lambda c: c.data.startswith('yes') or c.data.startswith('no'))
 async def process_callback(callback_query: types.CallbackQuery):
     global USER_SESSION
 
-    if callback_query.data == "yes":
-        USER_SESSION.add_one_to_score()
-    elif callback_query.data == "no":
-        pass
+    if not USER_SESSION.finished:
+        if callback_query.data == "yes":
+            USER_SESSION.add_one_to_score()
+        elif callback_query.data == "no":
+            pass
 
-    if USER_SESSION.get_question():
-        await quiz_show_question(session=USER_SESSION, message=callback_query.message)
+    if USER_SESSION.get_question(increase=0) and not USER_SESSION.finished:
+        await quiz_show_question(message=callback_query.message, increase=1)
+        await callback_query.answer(show_alert=False)
     else:
         if USER_SESSION.score <= 2:
-            result_text = "Результат ваших ответов:\nУ вас всё хорошо."
+            result_text = "Наличие одного и более пункта говорит о проблемах пищевого поведения."
         else:
-            result_text = "Результат ваших ответов:\nВсё плохо, надо лечиться. Обратитесь к специалисту."
-
-        await callback_query.message.answer(f"Кол-во 'ДА' ответов: {USER_SESSION.score}.\n\n{result_text}")
+            result_text = "Рекомендуется обратиться к специалисту за помощью. Ты всегда можешь обратится к создателям " \
+                          "фуд-бота за консультацией или воспользоваться возможностью поговорить с online " \
+                          "консультантом."
+        if not USER_SESSION.finished:
+            await callback_query.message.answer(f"Давай разберём твой результат. "
+                                                f"Это был список Признаков нарушенного пищевого поведения. "
+                                                f"Ты ответила \"Да\": {USER_SESSION.score}\n\n{result_text}")
+        USER_SESSION.save_quiz_result()
+        USER_SESSION.finished = True
+    await callback_query.answer(show_alert=False)
