@@ -35,7 +35,7 @@ async def start_hunger_test(message: types.Message):
         reply_markup=mhs.keyboard())
 
 
-@router.callback_query(F.text.in__([MyHunger.head_data, MyHunger.stomach_data]))
+@router.callback_query(F.data.in__([MyHunger.head_data, MyHunger.stomach_data]))
 async def process_callback(callback: types.CallbackQuery):
     if callback.data == MyHunger.head_data:
         await callback.message.answer(MyHunger.head_result)
