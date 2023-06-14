@@ -43,7 +43,7 @@ async def process_callback(callback: types.CallbackQuery):
             text=f"{MyHunger.name}\n\n{MyHunger.head_result}",
             reply_markup=None)
     elif callback.data == MyHunger.stomach_data:
-        await callback.message.answer(
+        await callback.message.edit_text(
             text=f"{MyHunger.name}\n\n{MyHunger.stomach_result}",
             reply_markup=None)
     await callback.answer(show_alert=False)
