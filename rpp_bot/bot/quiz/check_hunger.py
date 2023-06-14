@@ -1,6 +1,5 @@
 import logging as log
-from datetime import datetime
-from aiogram import Router, types
+from aiogram import Router, types, F
 from aiogram.filters import Command
 
 from rpp_bot.bot import keyboards as kb
@@ -10,64 +9,36 @@ router = Router()
 
 
 @dataclass
-class MyHungerSession:
+class MyHunger:
     base_question = "Где ты чувствуешь голод?"
     head_name = "Голова"
     stomach_name = "Живот"
+    head_data = "head"
+    stomach_data = "stomach"
     head_result = "ЛЕЧИТЬСЯ!"
     stomach_result = "ЖРАТЬ!"
 
+    def keyboard(self):
+        return kb.inline_two_buttons(
+            btn1_text=self.head_name,
+            btn2_text=self.stomach_name,
+            btn1_data=self.head_data, btn2_data=self.stomach_data
+        )
 
-USER_SESSION: MyHungerSession
 
 @router.message(Command(commands='myhunger'))
 async def start_hunger_test(message: types.Message):
-    global USER_SESSION
-
-    # инициализируем данные сессии
-    USER_SESSION = MyHungerSession(user_id=str(message.from_user.id))
-
+    mhs = MyHunger()
     # Сообщаем пользователю, что тест начат
-    await message.answer("<b>Тест на наличие проблем с пищевым поведением</b>")
-    await quiz_show_question(message=message, increase=1)
+    await message.answer(
+        text=f"<b>Тест на голод</b>\n\n{mhs.base_question}",
+        reply_markup=mhs.keyboard())
 
 
-async def quiz_show_question(message: types.Message, increase: int):
-    global USER_SESSION
-    question_text = USER_SESSION.get_question(increase=increase)
-    message_text = f"<b>Вопрос {USER_SESSION.question_number} из {USER_SESSION.question_count}</b>\n\n{question_text}"
-    if USER_SESSION.question_number > 1:
-        await message.edit_text(
-            text=message_text,
-            reply_markup=YES_NO_KB)
-    else:
-        await message.answer(text=message_text, reply_markup=kb.inline_two_buttons()))
-
-
-@router.callback_query(lambda c: c.data.startswith('yes') or c.data.startswith('no'))
-async def process_callback(callback_query: types.CallbackQuery):
-    global USER_SESSION
-
-    if not USER_SESSION.finished:
-        if callback_query.data == "yes":
-            USER_SESSION.add_one_to_score()
-        elif callback_query.data == "no":
-            pass
-
-    if USER_SESSION.get_question(increase=0) and not USER_SESSION.finished:
-        await quiz_show_question(message=callback_query.message, increase=1)
-        await callback_query.answer(show_alert=False)
-    else:
-        if USER_SESSION.score <= 2:
-            result_text = "Наличие одного и более пункта говорит о проблемах пищевого поведения."
-        else:
-            result_text = "Рекомендуется обратиться к специалисту за помощью. Ты всегда можешь обратится к создателям " \
-                          "фуд-бота за консультацией или воспользоваться возможностью поговорить с online " \
-                          "консультантом."
-        if not USER_SESSION.finished:
-            await callback_query.message.answer(f"Давай разберём твой результат. "
-                                                f"Это был список Признаков нарушенного пищевого поведения. "
-                                                f"Ты ответила \"Да\": {USER_SESSION.score}\n\n{result_text}")
-        USER_SESSION.save_quiz_result()
-        USER_SESSION.finished = True
-    await callback_query.answer(show_alert=False)
+@router.callback_query(F.text.in__([MyHunger.head_data, MyHunger.stomach_data]))
+async def process_callback(callback: types.CallbackQuery):
+    if callback.data == MyHunger.head_data:
+        await callback.message.answer(MyHunger.head_result)
+    elif callback.data == MyHunger.stomach_data:
+        await callback.message.answer(MyHunger.stomach_result)
+    await callback.answer(show_alert=False)
