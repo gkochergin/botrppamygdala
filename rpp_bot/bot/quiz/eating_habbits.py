@@ -1,6 +1,6 @@
 import logging as log
 from datetime import datetime
-from aiogram import Router, types
+from aiogram import Router, types, F
 from aiogram.filters import Command
 
 import rpp_bot.bot.api as api
@@ -66,7 +66,7 @@ async def quiz_show_question(message: types.Message, increase: int):
         await message.answer(text=message_text, reply_markup=YES_NO_KB)
 
 
-@router.callback_query(lambda c: c.data.startswith('yes') or c.data.startswith('no'))
+@router.callback_query(F.data.in_(['yes', 'no']))
 async def process_callback(callback_query: types.CallbackQuery):
     global USER_SESSION
 
