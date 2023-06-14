@@ -4,7 +4,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 
 import rpp_bot.bot.api as api
-import keyboards as kb
+from rpp_bot.bot import keyboards as kb
 
 router = Router()
 
@@ -42,7 +42,7 @@ class QuizSession:
 USER_SESSION: QuizSession
 
 
-@router.message(Command(commands='startquiz'))
+@router.message(Command(commands='myhabbits'))
 async def start_quiz(message: types.Message):
     global USER_SESSION
 

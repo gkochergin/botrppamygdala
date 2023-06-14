@@ -1,10 +1,10 @@
-from django.core.management.base import BaseCommand
 import logging
 import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from rpp_bot.core.config_reader import config
-import handlers, quizes
+import handlers
+from quiz import eating_habbits
 
 
 # инициализация sentry
@@ -34,7 +34,7 @@ async def main():
     print('\n', await bot.get_me(), '\n')
 
     dp.include_router(handlers.router)
-    dp.include_router(quizes.router)
+    dp.include_router(eating_habbits.router)
 
     # Запускаем бота и пропускаем все накопленные входящие
     await bot.delete_webhook(drop_pending_updates=True)
