@@ -13,6 +13,7 @@ router = Router()
 class QuizSession:
     questions = api.get_quiz_question_list()
     question_count = len(questions)
+    quiz_name = "<b>Тест на наличие проблем с пищевым поведением</b>"
     result_ok = "Наличие одного и более пункта говорит о проблемах пищевого поведения."
     result_bad = "Рекомендуется обратиться к специалисту за помощью. Ты всегда можешь обратится к создателям фуд-бота" \
                  " за консультацией или воспользоваться возможностью поговорить с online консультантом."
@@ -57,7 +58,7 @@ async def start_quiz(message: types.Message):
     USER_SESSION = QuizSession(user_id=str(message.from_user.id), question_number=0, score=0)
 
     # Сообщаем пользователю, что тест начат
-    await message.answer("<b>Тест на наличие проблем с пищевым поведением</b>")
+    await message.answer(USER_SESSION.quiz_name)
     await quiz_show_question(message=message, increase=1)
 
 
