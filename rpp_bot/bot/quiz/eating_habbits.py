@@ -13,6 +13,9 @@ router = Router()
 class QuizSession:
     questions = api.get_quiz_question_list()
     question_count = len(questions)
+    result_ok = "Наличие одного и более пункта говорит о проблемах пищевого поведения."
+    result_bad = "Рекомендуется обратиться к специалисту за помощью. Ты всегда можешь обратится к создателям фуд-бота" \
+                 " за консультацией или воспользоваться возможностью поговорить с online консультантом."
 
     def __init__(self, user_id, score: int, question_number: int):
         self.user_id = user_id
@@ -21,6 +24,8 @@ class QuizSession:
         self.score = score
         self.__field_name = 'question'
         self.finished = False
+        self.result_analyze = f"Это был список <b>Признаков нарушенного пищевого поведения</b>. Давай разберём твой " \
+                              f"результат. Ты ответила \"Да\":"
 
     def add_one_to_score(self) -> None:
         self.score += 1
@@ -81,15 +86,11 @@ async def process_callback(callback_query: types.CallbackQuery):
         await callback_query.answer(show_alert=False)
     else:
         if USER_SESSION.score <= 2:
-            result_text = "Наличие одного и более пункта говорит о проблемах пищевого поведения."
+            result_text = USER_SESSION.result_ok
         else:
-            result_text = "Рекомендуется обратиться к специалисту за помощью. Ты всегда можешь обратится к создателям " \
-                          "фуд-бота за консультацией или воспользоваться возможностью поговорить с online " \
-                          "консультантом."
+            result_text = USER_SESSION.result_bad
         if not USER_SESSION.finished:
-            await callback_query.message.answer(f"Давай разберём твой результат. "
-                                                f"Это был список Признаков нарушенного пищевого поведения. "
-                                                f"Ты ответила \"Да\": {USER_SESSION.score}\n\n{result_text}")
+            await callback_query.message.answer(f"{USER_SESSION.result_analyze} <b>{USER_SESSION.score}</b>\n\n{result_text}")
         USER_SESSION.save_quiz_result()
         USER_SESSION.finished = True
     await callback_query.answer(show_alert=False)
