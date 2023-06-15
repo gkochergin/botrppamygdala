@@ -47,7 +47,7 @@ class QuizSession:
 
 
 USER_SESSION: QuizSession
-YES_NO_KB = kb.inline_two_buttons(btn1_text="Да", btn2_text="Нет", btn1_data="yes", btn2_data="no")
+YES_NO_KB = kb.make_inline_kb_with_two_buttons(btn1_text="Да", btn2_text="Нет", btn1_data="yes", btn2_data="no")
 
 
 @router.message(Command(commands='myhabbits'))

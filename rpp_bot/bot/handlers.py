@@ -14,6 +14,7 @@ global text_part_num
 
 BTN_DAYS_LIST = [f'Day {i}' for i in range(0, 13)]
 BTN_BACK_NEXT = ['back', 'next']
+KB_BACK_NEXT = kb.make_inline_kb_with_two_buttons(btn1_text="<<<", btn2_text=">>>", btn1_data="back", btn2_data="next")
 
 
 def record_message_event(func):
@@ -75,7 +76,7 @@ async def get_days_and_sent_to_chat(message: types.Message):
         else:
             text_part_num = 0
             message_text = text_parts[text_part_num] + f"\n\nСтраница {1} из {len(text_parts)}"
-            await message.answer(message_text, reply_markup=kb.back_next())
+            await message.answer(message_text, reply_markup=KB_BACK_NEXT)
     else:
         message_text = "Сообщений за этот день не найдено"
         await message.answer(message_text)
@@ -108,5 +109,5 @@ async def back_next_callback(callback_query: types.CallbackQuery) -> None:
     print('Selected text part:', text_parts[text_part_num][:300])
     message_text = text_parts[text_part_num] + f"\n\nСтраница {text_part_num + 1} из {total_text_parts}"
 
-    await callback_query.message.edit_text(text=message_text, reply_markup=kb.back_next())
+    await callback_query.message.edit_text(text=message_text, reply_markup=KB_BACK_NEXT)
     await callback_query.answer(show_alert=False)

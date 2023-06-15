@@ -20,7 +20,7 @@ class MyHunger:
     stomach_result = "ЖРАТЬ!"
 
     def keyboard(self):
-        return kb.inline_two_buttons(
+        return kb.make_inline_kb_with_two_buttons(
             btn1_text=self.head_name,
             btn2_text=self.stomach_name,
             btn1_data=self.head_data, btn2_data=self.stomach_data
