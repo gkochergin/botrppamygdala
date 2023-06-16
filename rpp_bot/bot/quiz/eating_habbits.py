@@ -45,9 +45,13 @@ class QuizSession:
             self.question_number += increase
             return question
 
+    def keyboard(self):
+        btns = [{'name': 'Да', 'data': 'yes'}, {'name': 'Нет', 'data': 'no'}]
+        markup = kb.make_inline_kb(buttons_data=btns)
+        return markup
+
 
 USER_SESSION: QuizSession
-YES_NO_KB = kb.make_inline_kb(buttons_data=[{'name': 'Да', 'data': 'yes'}, {'name': 'Нет', 'data': 'no'}])
 
 
 @router.message(Command(commands='myhabbits'))
@@ -67,9 +71,9 @@ async def quiz_show_question(message: types.Message, increase: int):
     question_text = USER_SESSION.get_question(increase=increase)
     message_text = f"<b>Вопрос {USER_SESSION.question_number} из {USER_SESSION.question_count}</b>\n\n{question_text}"
     if USER_SESSION.question_number > 1:
-        await message.edit_text(text=message_text, reply_markup=YES_NO_KB)
+        await message.edit_text(text=message_text, reply_markup=USER_SESSION.keyboard())
     else:
-        await message.answer(text=message_text, reply_markup=YES_NO_KB)
+        await message.answer(text=message_text, reply_markup=USER_SESSION.keyboard())
 
 
 @router.callback_query(F.data.in_(['yes', 'no']))
