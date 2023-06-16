@@ -1,7 +1,6 @@
 import logging as log
 from aiogram.types import Message, CallbackQuery
 from api import get_messages_by_day
-from keyboards import make_inline_kb_with_two_buttons
 
 
 class DailyTasks:
@@ -43,8 +42,9 @@ class DailyTasks:
                 content = dictionary['content']
                 return content
 
-    def day_first(self):
-        main_message =
+    def typical_day(self):
+        message_intro = "Привет! Это твой новый день под сообщением есть кнопки с твоими лекциями и заданиями. Нажимай, и да пребудет с тобой сила, мой юный падаван."
+        btn_names_list = ['Лонгрид', 'Медитация', 'Статья', 'Упражнения']
 
 
 
