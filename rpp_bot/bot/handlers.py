@@ -13,8 +13,8 @@ global text_parts
 global text_part_num
 
 BTN_DAYS_LIST = [f'Day {i}' for i in range(0, 13)]
-BTN_BACK_NEXT = ['back', 'next']
-KB_BACK_NEXT = kb.make_inline_kb_with_two_buttons(btn1_text="<<<", btn2_text=">>>", btn1_data="back", btn2_data="next")
+BTN_BACK_NEXT = [{'name':'<<<<', 'data':'back'}, {'name':'>>>>', 'data':'next'}]
+KB_BACK_NEXT = kb.make_inline_kb(buttons_data=BTN_BACK_NEXT)
 
 
 def record_message_event(func):
