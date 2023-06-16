@@ -20,11 +20,9 @@ class MyHunger:
     stomach_result = "ЖРАТЬ!"
 
     def keyboard(self):
-        return kb.make_inline_kb_with_two_buttons(
-            btn1_text=self.head_name,
-            btn2_text=self.stomach_name,
-            btn1_data=self.head_data, btn2_data=self.stomach_data
-        )
+        btns = [{'name': self.head_name, 'data': self.head_data},
+                {'name': self.stomach_name, 'data': self.stomach_data}]
+        return kb.make_inline_kb(buttons_data=btns)
 
 
 @router.message(Command(commands='myhunger'))
