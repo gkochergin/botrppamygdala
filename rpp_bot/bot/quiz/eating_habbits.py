@@ -47,7 +47,7 @@ class QuizSession:
 
 
 USER_SESSION: QuizSession
-YES_NO_KB = kb.make_inline_kb_with_two_buttons(btn1_text="Да", btn2_text="Нет", btn1_data="yes", btn2_data="no")
+YES_NO_KB = kb.make_inline_kb(buttons_data=[{'name': 'Да', 'data': 'yes'}, {'name': 'Нет', 'data': 'no'}])
 
 
 @router.message(Command(commands='myhabbits'))
@@ -91,7 +91,8 @@ async def process_callback(callback_query: types.CallbackQuery):
         else:
             result_text = USER_SESSION.result_bad
         if not USER_SESSION.finished:
-            await callback_query.message.answer(f"{USER_SESSION.result_analyze} <b>{USER_SESSION.score}</b>\n\n{result_text}")
+            await callback_query.message.answer(
+                f"{USER_SESSION.result_analyze} <b>{USER_SESSION.score}</b>\n\n{result_text}")
         USER_SESSION.save_quiz_result()
         USER_SESSION.finished = True
     await callback_query.answer(show_alert=False)
