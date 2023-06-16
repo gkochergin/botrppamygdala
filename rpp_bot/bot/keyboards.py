@@ -53,13 +53,7 @@ def make_inline_kb(buttons_data: List[dict], sizes: Optional[List[int]] = None,
 
     # Adjust keyboard rows sizes if sizes is provided
     if sizes:
-        # Check if sizes is a list
-        if not isinstance(sizes, list):
-            raise TypeError(f"Expected <list> type of 'sizes' parameter, but received: {type(sizes)}")
-
         keyboard.adjust(*sizes, repeat=repeat)
-    else:
-        keyboard.adjust()
 
     # Get the constructed InlineKeyboardMarkup object
     markup = keyboard.as_markup()

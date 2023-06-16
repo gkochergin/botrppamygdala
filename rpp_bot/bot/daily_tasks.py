@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery
 from api import get_messages_by_day
 from keyboards import make_inline_kb
 
+
 class DailyTasks:
     # я хочу, чтобы этот класс обслуживал все необходимые функции для вызова заданий каждого дня
     message_audio = None
@@ -45,10 +46,12 @@ class DailyTasks:
     def typical_day(self):
         message_intro = "Привет! Это твой новый день под сообщением есть кнопки с твоими лекциями и заданиями. " \
                         "Нажимай, и да пребудет с тобой сила, мой юный падаван."
-        btn_names_list = ['Лонгрид', 'Медитация', 'Статья', 'Упражнения']
+        btn_names = ['Лонгрид', 'Медитация', 'Упражнение']
+        btn_callbacks = ['longread', 'meditation', 'workout']
 
+        btns_data = [{'name': name, 'data': callback} for name, callback in zip(btn_names, btn_callbacks)]
 
-
+        return
 
 user_day = DailyTasks(day_num=1).day_content()
 print(user_day)
@@ -67,5 +70,3 @@ class UserSession:
 
     def save_session(self):
         pass
-
-
