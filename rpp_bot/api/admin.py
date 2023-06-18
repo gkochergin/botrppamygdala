@@ -12,7 +12,7 @@ admin.site.register(QuizQuestions)
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['day', 'ordinal_number', 'content_type', 'content']
+    list_display = ['day', 'ordinal_number', 'message_type', 'content_type', 'content']
     list_editable = ['ordinal_number']
     list_filter = ['day', 'content_type']
 

@@ -69,7 +69,7 @@ class Message(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return f'Day: {self.day} > Type: {self.content_type} > Order: {self.ordinal_number}> [{self.content[:50]}]'
+        return f'Day: {self.day} > M-Type: {self.message_type} > C-Type: {self.content_type} > Order: {self.ordinal_number} > [{self.content[:50]}]'
 
 
 class UserMessage(models.Model):
