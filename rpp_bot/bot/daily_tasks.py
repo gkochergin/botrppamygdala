@@ -22,13 +22,7 @@ class DailyTasks:
 
 
     def typical_day(self):
-        btn_names_matching = [
-            {"article": f'{emoji.emojize(":open_book:")} Статья'},
-            {"lecture": f'{emoji.emojize(":television:")} Лекция'},
-            {"meditation": f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'},
-            {"workout": f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'},
 
-        ]
 
         # Инициализация дня
         btns_data = []

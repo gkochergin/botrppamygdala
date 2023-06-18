@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime
 import json
+from typing import List
 
 BASE_URL = 'http://localhost:8000/api/v1'
 
@@ -34,11 +35,26 @@ def get_messages_by_day(day: int) -> list:
     response = requests.get(url=url, params=param).json()
     return response
 
+
 def get_messages_by_day_and_type(day: int, type: str) -> list:
     url = f'{BASE_URL}/messages'
     param = {'day': day, 'type': type}
     response = requests.get(url=url, params=param).json()
     return response
+
+
+def get_daily_buttons_data(day: int) -> List[dict]:
+    url = f'{BASE_URL}/messages'
+    param = {'day': day}
+    response = requests.get(url=url, params=param).json()
+    btn_data = [
+        {'name': item['button_name'], 'callback': item['button_callback']} for item in response
+    ]
+    return btn_data
+
+
+a = get_daily_buttons_data(day=1)
+print(len(a), '\n', a)
 
 
 def save_user_timezone(user_id: str) -> None:
