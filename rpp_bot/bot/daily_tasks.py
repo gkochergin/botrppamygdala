@@ -44,17 +44,41 @@ class DailyTasks:
                 return content
 
     def typical_day(self):
+        # Инициализация дня
         message_intro = "Привет! Это твой новый день под сообщением есть кнопки с твоими лекциями и заданиями. " \
                         "Нажимай, и да пребудет с тобой сила, мой юный падаван."
         btn_names = ['Лонгрид', 'Медитация', 'Упражнение']
         btn_callbacks = ['longread', 'meditation', 'workout']
-
+        message_type = ['TXT']
         btns_data = [{'name': name, 'data': callback} for name, callback in zip(btn_names, btn_callbacks)]
+        print(btns_data)
 
-        return
+        # я не понимаю, как определить кол-во кнопок? я же не знаю, сколько будет всего сообщений?
+        # наоборот, знаю, это кол-во записей за этот день. они уже отсортированы в нужном порядке.
+        # окей, а каковы должны быть надписи на этих кнопках? а вот это уже хороший вопрос.
+        # можно попробовать составить такой словарь
+        buttons_quantity = self.tasks # 3
 
-user_day = DailyTasks(day_num=1).day_content()
-print(user_day)
+        make_inline_kb()
+
+
+        # Вывод пользователю await message.answer или аналог
+        print(message_intro)
+        for b in btn_names:
+            print([b])
+        print()
+
+        #
+
+
+
+        # Доступ к ИИ
+
+
+user_day = DailyTasks(day_num=1)
+# print(user_day)
+
+print(user_day.typical_day())
 
 
 class UserSession:

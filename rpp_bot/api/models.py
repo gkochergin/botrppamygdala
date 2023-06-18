@@ -1,5 +1,5 @@
 from tokenize import tokenize
-
+import emoji
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -32,6 +32,7 @@ class User(models.Model):
 
 
 class Message(models.Model):
+    # content types
     TEXT = 'TXT'
     VIDEO = 'VID'
     AUDIO = 'AUD'
@@ -46,6 +47,17 @@ class Message(models.Model):
         (GIF, 'Gif'),
     ]
 
+    # message types
+    ARTICLE = 'ARTICLE'
+    MEDITATION = 'MEDITATION'
+    WORKOUT = 'WORKOUT'
+
+    MESSAGE_TYPES = [
+        (ARTICLE, f'{emoji.emojize(":open_book:")} Статья'),
+        (MEDITATION, f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'),
+        (WORKOUT, f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'),
+    ]
+
     # day 0 - это все сообщения за первый интро день, day 12 - то сообщения за последний день аутро
     day = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(12)],
@@ -53,6 +65,7 @@ class Message(models.Model):
         help_text='Номер дня по счету от даты регистрации, когда отправить сообщение')
     ordinal_number = models.IntegerField(help_text='Порядковый номер отправки (уникальный)', default=1)
     content_type = models.CharField(max_length=3, choices=CONTENT_TYPES, default=TEXT)
+    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default=ARTICLE)
     content = models.TextField()
 
     def __str__(self):
