@@ -17,7 +17,7 @@ class UserMessageSerializer(ModelSerializer):
 class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = ("day", "ordinal_number", "message_type", "content_type", "content")
+        fields = ("day", "ordinal_number", "message_type", "content_type", "content", "button_name", "button_callback")
 
 
 class BotAdminsSerializer(ModelSerializer):

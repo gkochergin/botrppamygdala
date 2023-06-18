@@ -51,9 +51,11 @@ class Message(models.Model):
     ARTICLE = 'ARTICLE'
     MEDITATION = 'MEDITATION'
     WORKOUT = 'WORKOUT'
+    LECTURE = 'LECTURE'
 
     MESSAGE_TYPES = [
         (ARTICLE, f'{emoji.emojize(":open_book:")} Статья'),
+        (LECTURE, f'{emoji.emojize(":television:")} Лекция'),
         (MEDITATION, f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'),
         (WORKOUT, f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'),
     ]
@@ -67,6 +69,26 @@ class Message(models.Model):
     content_type = models.CharField(max_length=3, choices=CONTENT_TYPES, default=TEXT)
     message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default=ARTICLE)
     content = models.TextField()
+
+    def generate_button_data(self):
+        name = ''
+        for t in self.MESSAGE_TYPES:
+            if self.message_type in t:
+                name = t[1]
+        prefix = self.message_type
+        suffix = self.ordinal_number
+        callback: str = ':'.join([str(prefix), str(suffix)])
+        return name, callback.lower()
+
+    @property
+    def button_name(self):
+        name, _ = self.generate_button_data()
+        return name
+
+    @property
+    def button_callback(self):
+        _, callback = self.generate_button_data()
+        return callback
 
     def __str__(self):
         return f'Day: {self.day} > M-Type: {self.message_type} > C-Type: {self.content_type} > Order: {self.ordinal_number} > [{self.content[:50]}]'
