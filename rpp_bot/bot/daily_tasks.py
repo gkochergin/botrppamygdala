@@ -1,8 +1,25 @@
 from aiogram.types import Message, CallbackQuery
+from aiogram.handlers import callback_query
+from aiogram import Router
+from aiogram.filters import Command
+import pymorphy2
 
 import api
 import emoji
 from keyboards import make_inline_kb
+from typing import Union
+
+router = Router()
+
+
+
+
+def matching_word_numeral(wrd: str, dgt: int):
+    # Согласование слов с числительными
+    # https://pymorphy2.readthedocs.io/en/latest/user/guide.html#id8
+    morph = pymorphy2.MorphAnalyzer()
+    word_parse = morph.parse(wrd)[0]
+    return word_parse.make_agree_with_number(dgt).word
 
 
 class DailyTasks:
@@ -16,57 +33,22 @@ class DailyTasks:
         self.day_num = day_num
         self.tasks = api.get_messages_by_day(day_num)  # список заданий этого дня
         self.tasks_count = len(self.tasks)
-        self.daily_greeting_template = f"{user_first_name.strip()}, приветствую тебя на {self.day_num} дне нашего марафона. " \
-                                  f"Под этим сообщением есть кнопки с твоими лекциями и заданиями. Давай начинать!"
+        self.daily_greeting_template = f"{user_first_name.strip()}, приветствую тебя на {self.day_num} " \
+                                       f"дне нашего марафона. Под этим сообщением есть {self.tasks_count} " \
+                                       f"{matching_word_numeral(wrd='кнопка', dgt=self.tasks_count)} " \
+                                       f"с твоими лекциями и заданиями. Давай начинать!"
 
-
-
-    def typical_day(self):
-
-
-        # Инициализация дня
-        btns_data = []
-
-
-
-        for dictionary in self.tasks:
-            btn_names.append(dictionary['message_type'])
-        btn_callbacks = [str]
-        match_data = [{'name': name, 'data': callback} for name, callback in zip(btn_names, btn_callbacks)]
-        print(btns_data)
-
-        # я не понимаю, как определить кол-во кнопок? я же не знаю, сколько будет всего сообщений?
-        # наоборот, знаю, это кол-во записей за этот день. они уже отсортированы в нужном порядке.
-        # окей, а каковы должны быть надписи на этих кнопках? а вот это уже хороший вопрос.
-        # можно попробовать составить такой словарь
-        buttons_quantity = self.tasks  # 3
-
-        make_inline_kb(btns_data)
-
-        # Вывод пользователю await message.answer или аналог
-        print(self.daily_greeting_template)
-        for b in btn_names:
-            print([b])
-        print()
-
-        #
-
-        # Доступ к ИИ
-
-
-user_day = DailyTasks(day_num=1, user_first_name='Наташа')
-# print(user_day)
-
-print(user_day.typical_day())
-
-b = api.get_messages_by_day(day=1)
+    def get_daily_keyboard(self):
+        btns_data = api.get_daily_buttons_data(self.day_num)
+        markup = make_inline_kb(buttons_data=btns_data, sizes=[1, ])
+        return markup
 
 
 class UserSession:
     # а вот возможно надо создать активную сессию пользователя и хранить там данные
     # сохранять пользователя в бд
 
-    def __init__(self, tg_bot: Message or CallbackQuery):
+    def __init__(self, tg_bot: Union[Message, CallbackQuery]):
         # bot_access - любой объект бота, через который можно вызвать данные пользователя
         # это может быть message или callback_query
         self.first_name = tg_bot.from_user.first_name
@@ -75,3 +57,12 @@ class UserSession:
 
     def save_session(self):
         pass
+
+
+@router.message(Command(commands=['startday']))
+async def command_handler_startday(message: Message):
+    session = UserSession(message)
+    today = DailyTasks(day_num=7, user_first_name=session.first_name)
+    await message.answer(text=today.daily_greeting_template, reply_markup=today.get_daily_keyboard())
+
+

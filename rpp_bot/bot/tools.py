@@ -136,3 +136,15 @@ lorem_ipsum = "\nMessage 1 at day 3. Very very long content with lorem ipsum.\nL
 #
 # for i in b:
 #     print(i)
+
+
+def record_message_event(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            with open('error.log', 'a') as f:
+                f.write(f'Error: {e}\n')
+            raise
+
+    return wrapper

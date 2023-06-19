@@ -36,25 +36,32 @@ def get_messages_by_day(day: int) -> list:
     return response
 
 
-def get_messages_by_day_and_type(day: int, type: str) -> list:
+def get_messages_by_day_and_type(day: int) -> list:
     url = f'{BASE_URL}/messages'
-    param = {'day': day, 'type': type}
+    param = {'day': day}
     response = requests.get(url=url, params=param).json()
     return response
 
 
-def get_daily_buttons_data(day: int) -> List[dict]:
+def get_daily_buttons_data(day: int):
     url = f'{BASE_URL}/messages'
     param = {'day': day}
     response = requests.get(url=url, params=param).json()
     btn_data = [
-        {'name': item['button_name'], 'callback': item['button_callback']} for item in response
+        {'name': item['button_name'], 'data': item['button_callback']} for item in response
     ]
+
+    print(get_buttons_callback.__module__, ">", get_buttons_callback.__name__, ">", 'btn_data', ">", btn_data, '\n')
+
     return btn_data
 
 
-a = get_daily_buttons_data(day=1)
-print(len(a), '\n', a)
+def get_buttons_callback(day: int):
+    url = f'{BASE_URL}/messages'
+    param = {'day': day}
+    response = requests.get(url=url, params=param).json()
+    callbacks = [item['button_callback'] for item in response]
+    return callbacks
 
 
 def save_user_timezone(user_id: str) -> None:
