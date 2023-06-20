@@ -19,7 +19,8 @@ class BotAdmins(models.Model):
 
 
 class User(models.Model):
-    user_id = models.BigIntegerField(verbose_name='Telegram ID', primary_key=True, unique=True)
+    user_id = models.BigIntegerField(verbose_name='Tg User ID', primary_key=True, unique=True)
+    chat_id = models.BigIntegerField(verbose_name='Tg Chat ID', unique=True, default=None)
     username = models.CharField(max_length=255, blank=False, default='')
     reg_date = models.DateTimeField(
         auto_now_add=True,

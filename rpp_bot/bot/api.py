@@ -6,9 +6,9 @@ from typing import List
 BASE_URL = 'http://localhost:8000/api/v1'
 
 
-def create_user(user_id: str, username: str, timezone: str):
+def create_user(user_id: int, chat_id: int, username: str, timezone: str):
     url = f'{BASE_URL}/bot-users'
-    user_data = {'user_id': user_id, 'username': username, 'timezone': timezone}
+    user_data = {'user_id': user_id, 'chat_id': chat_id, 'username': username, 'timezone': timezone}
     requests.post(url=url, data=user_data)
 
     return 'Событие Create User завершено.'
@@ -88,12 +88,10 @@ def get_quiz_result():
     return response.json()
 
 
-def get_day_num(user_id):
+def get_id_and_day_num_list() -> List[dict]:
     url = f'{BASE_URL}/bot-users'
-    param = {'user_id': user_id}
-    response = requests.get(url=url, params=param).json()
-    return response[0]['reg_date'], response[0]['days_after_reg_date']
+    response: List[dict] = requests.get(url=url).json()
+    keys_to_keep = ['user_id', 'days_after_reg_date']
+    cleared_response = [{key: dictionary.get(key) for key in keys_to_keep} for dictionary in response]
+    return cleared_response
 
-a, b = get_day_num(user_id=138405449)
-print(a)
-print(b)
