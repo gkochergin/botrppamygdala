@@ -4,7 +4,6 @@ from .models import User, UserMessage, Message, BotAdmins, QuizResults, QuizQues
 # Register your models here.
 
 
-admin.site.register(User)
 admin.site.register(UserMessage)
 admin.site.register(BotAdmins)
 admin.site.register(QuizResults)
@@ -21,3 +20,7 @@ class MessageAdmin(admin.ModelAdmin):
     def simple_token_calc(self, cont: Message):
         tokens = cont.content.max_length
         return str(tokens)
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    readonly_fields = ['reg_date', 'days_after_reg_date']

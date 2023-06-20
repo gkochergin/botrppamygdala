@@ -86,3 +86,14 @@ def get_quiz_result():
     url = f'{BASE_URL}/quiz-result'
     response = requests.get(url=url)
     return response.json()
+
+
+def get_day_num(user_id):
+    url = f'{BASE_URL}/bot-users'
+    param = {'user_id': user_id}
+    response = requests.get(url=url, params=param).json()
+    return response[0]['reg_date'], response[0]['days_after_reg_date']
+
+a, b = get_day_num(user_id=138405449)
+print(a)
+print(b)

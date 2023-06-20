@@ -2,6 +2,7 @@ from tokenize import tokenize
 import emoji
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from datetime import datetime, timezone
 
 
 # Create your models here.
@@ -22,13 +23,19 @@ class User(models.Model):
     username = models.CharField(max_length=255, blank=False, default='')
     reg_date = models.DateTimeField(
         auto_now_add=True,
-        editable=False,
         verbose_name='Registration date',
         help_text='Дата первой активации бота')
     timezone = models.CharField(max_length=10, help_text='Часовой пояс пользователя')
 
     def __str__(self):
         return f'TG.ID > {self.user_id} | REG.DATE > {self.reg_date}'
+
+    @property
+    def days_after_reg_date(self):
+        days_passed_from_now = datetime.now(timezone.utc) - self.reg_date
+        number_of_days = days_passed_from_now.days
+        return number_of_days
+
 
 
 class Message(models.Model):
