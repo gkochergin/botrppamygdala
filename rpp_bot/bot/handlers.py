@@ -41,13 +41,20 @@ data_storage = DataStorage()
 
 @router.message(Command(commands=["start"]))
 async def command_start_handler(message: types.Message) -> None:
-    messages_list = api.get_messages_by_day(day=0)
-
-    await message.answer(messages_list[0]['content'])
+    # Creating new user in db, skip if already exists
     api.create_user(
-        user_id=str(message.from_user.id),
+        user_id=message.from_user.id,
+        chat_id=message.chat.id,
         username=message.from_user.username,
         timezone='UTC')
+
+    # Get list of messages by day number. By default, first day number equals zero.
+    messages_list = api.get_messages_by_day(day=0)
+
+    # Send message to user
+    await message.answer(messages_list[0]['content'])
+
+    # Save to db "message sent to user" event
     api.record_sent_message_event(user_id=message.from_user.id, message_id=1, sent_at=datetime.now())
 
 
