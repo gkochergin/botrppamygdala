@@ -93,5 +93,7 @@ def get_id_and_day_num_list() -> List[dict]:
     response: List[dict] = requests.get(url=url).json()
     keys_to_keep = ['user_id', 'days_after_reg_date']
     cleared_response = [{key: dictionary.get(key) for key in keys_to_keep} for dictionary in response]
-    return cleared_response
+    return response #cleared_response
 
+a = get_id_and_day_num_list()
+print(a)
