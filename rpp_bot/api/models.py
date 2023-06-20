@@ -27,6 +27,7 @@ class User(models.Model):
         verbose_name='Registration date',
         help_text='Дата первой активации бота')
     timezone = models.CharField(max_length=10, help_text='Часовой пояс пользователя')
+    marathon_completed = models.BooleanField(help_text='Статус завершения марафона', default=False)
 
     def __str__(self):
         return f'TG.ID > {self.user_id} | REG.DATE > {self.reg_date}'

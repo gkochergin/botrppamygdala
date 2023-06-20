@@ -91,9 +91,23 @@ def get_quiz_result():
 def get_id_and_day_num_list() -> List[dict]:
     url = f'{BASE_URL}/bot-users'
     response: List[dict] = requests.get(url=url).json()
-    keys_to_keep = ['user_id', 'days_after_reg_date']
-    cleared_response = [{key: dictionary.get(key) for key in keys_to_keep} for dictionary in response]
-    return response #cleared_response
+    keys_to_keep = ['user_id', 'chat_id', 'days_after_reg_date']
+    cleared_response = [
+        {key: dictionary.get(key) for key in keys_to_keep}
+        for dictionary in response if dictionary['marathon_completed']
+    ]
+    return cleared_response
 
-a = get_id_and_day_num_list()
-print(a)
+
+def set_marathon_completed(user_id: str, marathon_completed: bool = True):
+    url = f'{BASE_URL}/bot_users'
+    param = {'user_id': user_id}
+    data = {'marathon_completed': marathon_completed}
+    response = requests.post(url=url, params=param, data=data)
+    return response, response.status_code
+
+
+user_id = '138405449'
+complete = set_marathon_completed(user_id=user_id)
+user = get_user(user_id=user_id)
+print(complete)

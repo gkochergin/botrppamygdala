@@ -1,27 +1,29 @@
-
-
 """
 Логика:
-
 Процесс запускается регулярно, каждый час, например.
-Процесс проверяет какой сегодня день и сколько дней прошло с даты регистрации
-
-
+Процесс получает номер дня для отправки контента пользователю.
+Процесс инициирует поочередно отправку заданий пользователям
 
 """
-import datetime
-
 from rpp_bot.bot import api
 from rpp_bot.bot.handlers import get_day_tasks_and_sent_to_user
-
-list_of_recipients = api.get_id_and_day_num_list()  # возвращает список всех user_id доступных на момент в системе
-
-for recipient in list_of_recipients:
-    print(recipient['user_id'])
-    print(recipient['days_after_reg_date'])
-    # для recipient нужно активировать функцию
-    # await get_day_tasks_and_sent_to_user(message='', day_num=recipient[''])
+from rpp_bot.bot.main import bot
 
 
+def main():
+    # по api получаем список словарей с telegram id, chat id и day number для каждого пользователя
+    list_of_recipients = api.get_id_and_day_num_list()
 
-    # сколько дней прошло с даты регистрации пользователя? мб это сразу считать в базе данных в виде параметра? точно!
+    # для каждого получателя запускаем функцию
+    for recipient in list_of_recipients:
+        await get_day_tasks_and_sent_to_user(
+            bot=bot,
+            chat_id=recipient['chat_id'],
+            day_num=recipient['days_after_reg_date'])
+
+
+
+
+#
+# if __name__ == '__main__':
+#     pass

@@ -1,10 +1,11 @@
 import dataclasses
 from datetime import datetime
-from aiogram import Router, types, F
+from aiogram import Router, types, F, Bot
 from aiogram.filters import Command
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 from typing import List
+
 
 import rpp_bot.bot.api as api
 import tools as tls
@@ -93,7 +94,8 @@ async def split_text_and_get_markup(response: list, ds=data_storage):
 
 
 @router.message(F.text.in_(data_storage.btn_days_list))
-async def get_day_tasks_and_sent_to_user(message: types.Message, day_num: int == -1, ds=data_storage):
+async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1, ds=data_storage):
+    print('day_num >', day_num)
     if day_num > -1:
         ds.selected_day = day_num
     else:
@@ -102,8 +104,11 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, day_num: int ==
     ds.callback_match_list = api.get_buttons_callback(ds.selected_day)
 
     today_tasks = DailyTasks(day_num=ds.selected_day, user_first_name=message.from_user.first_name)
-
-    await message.answer(text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
+    print('bot >', bot)
+    if chat_id == -1:
+        await message.answer(text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
+    else:
+        await bot.send_message(chat_id=chat_id, text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
 
     @router.callback_query(F.data.in_(data_storage.callback_match_list))
     async def process_message_types_callbacks(callback: types.CallbackQuery, ds=data_storage):
@@ -125,6 +130,7 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, day_num: int ==
 
         # pagination logic
         if callback_query.data == 'back':
+            print(ds.text_part_num)
             if ds.text_part_num > 0:
                 ds.text_part_num -= 1
             else:
@@ -134,9 +140,7 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, day_num: int ==
                 ds.text_part_num += 1
             elif ds.text_part_num == total_text_parts - 1:
                 text_part_num = 0
-        print('Expected text part number:', ds.text_part_num)
         # выбираем кусок текста по его номеру в списке и форматируем сообщение для отправки
-        print('Selected text part:', ds.text_parts_list[ds.text_part_num][:300])
         message_text = ds.text_parts_list[
                            ds.text_part_num] + f"\n\nСтраница {ds.text_part_num + 1} из {total_text_parts}"
 

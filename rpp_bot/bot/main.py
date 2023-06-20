@@ -7,7 +7,6 @@ import handlers
 import daily_tasks
 from quiz import eating_habbits, check_hunger
 
-
 # инициализация sentry
 # sentry_sdk.init(
 #     dsn=config.sentry_dsn.get_secret_value(),
@@ -18,22 +17,23 @@ from quiz import eating_habbits, check_hunger
 #     traces_sample_rate=1.0
 # )
 
+
+# назначаем диспетчер, он же коренной роутер
+dp = Dispatcher(storage=MemoryStorage())
+
+# создаем объект бота, передаем токен и режим парсинга
+bot = Bot(
+    token=config.tg_token.get_secret_value(),
+    parse_mode='HTML'
+)
+
+
 async def main():
     logging.basicConfig(
         level=logging.DEBUG, filename='logs/bot_debug.log',
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
     )
-
-    # назначаем диспетчер, он же коренной роутер
-    dp = Dispatcher(storage=MemoryStorage())
-
-    # создаем объект бота, передаем токен и режим парсинга
-    bot = Bot(
-        token=config.tg_token.get_secret_value(),
-        parse_mode='HTML'
-    )
     print('\n', await bot.get_me(), '\n')
-
     dp.include_router(handlers.router)
     dp.include_router(daily_tasks.router)
     dp.include_routers(eating_habbits.router, check_hunger.router)
@@ -41,6 +41,7 @@ async def main():
     # Запускаем бота и пропускаем все накопленные входящие
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -21,15 +21,29 @@ class UserApiView(ListCreateAPIView):
         # с информацией об ошибках валидации.
         serializer.is_valid(raise_exception=True)
 
+        # получаем данные из запроса от сериализатора после проверки данных
+        user_id = serializer.validated_data.get('user_id')
+        marathon_completed = serializer.validated_data.get('marathon_completed')
+
         # получаем объект или создаём новый
-        user, created = User.objects.get_or_create(**serializer.validated_data)
+        user, created = User.objects.get_or_create(
+            user_id=user_id,
+            defaults=serializer.validated_data)
+
+        if not created:
+            # если пользователь уже существует в базе данных, обновляем значение поля marathon_completed
+            user.marathon_completed = marathon_completed
+            user.save(update_fields=['marathon_completed'])
 
         # Получаем заголовки ответа
         headers = self.get_success_headers(serializer.data)
 
-        # возвращаем ответ с сериализованными данными объекта и соответствующим статусом
+        # возвращаем ответ со сериализованными данными объекта и соответствующим статусом
         # (201, если был создан новый объект, иначе 200).
-        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK, headers=headers)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED if created
+            else status.HTTP_200_OK, headers=headers)
 
 
 class UserMessagesApiCreate(CreateAPIView):
