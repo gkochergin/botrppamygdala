@@ -93,16 +93,25 @@ async def split_text_and_get_markup(response: list, ds=data_storage):
         return message_text, None
 
 
+"""
+Если с даты регистрации у пользователя прошло более 12 дней (т.е. фактически считаем уже >=13),
+то этот пользователь получает статус "marathon_completed=True". При этом нам не важно, прочитал он свои задания
+или нет. 
+
+Как пользователю, прошедшему марафон дать возможность вернуться к информации каждого дня?
+
+"""
+
 @router.message(F.text.in_(data_storage.btn_days_list))
 async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1, ds=data_storage):
-    print('day_num >', day_num)
+    print('day_num ?', day_num)
     if day_num > -1:
         ds.selected_day = day_num
     else:
         ds.selected_day = int(message.text.removeprefix("Day "))
-
+    print(ds.selected_day)
     ds.callback_match_list = api.get_buttons_callback(ds.selected_day)
-
+    print(ds.callback_match_list)
     today_tasks = DailyTasks(day_num=ds.selected_day, user_first_name=message.from_user.first_name)
     print('bot >', bot)
     if chat_id == -1:

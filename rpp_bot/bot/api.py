@@ -53,6 +53,7 @@ def get_buttons_callback(day: int):
     url = f'{BASE_URL}/messages'
     param = {'day': day}
     response = requests.get(url=url, params=param).json()
+    print(response)
     callbacks = [item['button_callback'] for item in response]
     return callbacks
 
@@ -89,7 +90,7 @@ def get_id_and_day_num_list() -> List[dict]:
     keys_to_keep = ['user_id', 'chat_id', 'days_after_reg_date']
     cleared_response = [
         {key: dictionary.get(key) for key in keys_to_keep}
-        for dictionary in response if dictionary['marathon_completed']
+        for dictionary in response if dictionary['marathon_completed'] is False
     ]
     return cleared_response
 
@@ -99,3 +100,7 @@ def set_marathon_completed(user_id: str, completed: bool = True):
     data = {'user_id': user_id, 'marathon_completed': completed}
     response = requests.put(url=url, data=data).json()
     return response
+
+
+print(get_buttons_callback(day=3))
+print(get_id_and_day_num_list)

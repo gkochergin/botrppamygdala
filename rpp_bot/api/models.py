@@ -90,12 +90,12 @@ class Message(models.Model):
         return name, callback.lower()
 
     @property
-    def button_name(self):
+    def button_name(self) -> str:
         name, _ = self.generate_button_data()
         return name
 
     @property
-    def button_callback(self):
+    def button_callback(self) -> str:
         _, callback = self.generate_button_data()
         return callback
 

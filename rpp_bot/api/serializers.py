@@ -1,8 +1,11 @@
 from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizResults
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import CharField, IntegerField
 
 
 class UserSerializer(ModelSerializer):
+    days_after_reg_date = IntegerField()
+
     class Meta:
         model = User
         fields = "__all__"
@@ -15,6 +18,9 @@ class UserMessageSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
+    button_name = CharField()
+    button_callback = CharField()
+
     class Meta:
         model = Message
         fields = "__all__"
