@@ -23,4 +23,4 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    readonly_fields = ['reg_date', 'days_after_reg_date']
+    readonly_fields = ['user_id', 'chat_id', 'username', 'marathon_completed', 'reg_date', 'days_after_reg_date']

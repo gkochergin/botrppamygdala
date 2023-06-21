@@ -14,12 +14,12 @@ def create_user(user_id: int, chat_id: int, username: str, timezone: str):
     return 'Событие Create User завершено.'
 
 
-def get_user(user_id: str):
+def get_user_by_id(user_id: str):
     url = f'{BASE_URL}/bot-users'
     user_data = {'user_id': user_id}
-    user = requests.get(url=url, data=user_data).json()
-    print('Событие Get User завершено.')
-    return user
+    get_user = requests.get(url=url, data=user_data).json()
+    print(get_user_by_id.__module__, '>', get_user_by_id.__name__, f'> Событие Get User для user id: {user_id} завершено.')
+    return get_user
 
 
 def record_sent_message_event(user_id, message_id, sent_at):
@@ -36,13 +36,6 @@ def get_messages_by_day(day: int) -> list:
     return response
 
 
-def get_messages_by_day_and_type(day: int) -> list:
-    url = f'{BASE_URL}/messages'
-    param = {'day': day}
-    response = requests.get(url=url, params=param).json()
-    return response
-
-
 def get_daily_buttons_data(day: int):
     url = f'{BASE_URL}/messages'
     param = {'day': day}
@@ -51,7 +44,7 @@ def get_daily_buttons_data(day: int):
         {'name': item['button_name'], 'data': item['button_callback']} for item in response
     ]
 
-    print(get_buttons_callback.__module__, ">", get_buttons_callback.__name__, ">", 'btn_data', ">", btn_data, '\n')
+    print(get_buttons_callback.__name__, ">", 'btn_data', ">", btn_data, '\n')
 
     return btn_data
 
@@ -64,9 +57,11 @@ def get_buttons_callback(day: int):
     return callbacks
 
 
-def save_user_timezone(user_id: str) -> None:
-    # нужно будет сделать апдейт поля timezone конкретного юзера в базе данных
-    pass
+def save_user_timezone(user_id: str, timezone: str) -> None:
+    url = f'{BASE_URL}/upd-user-data/{user_id}/'
+    data = {'user_id': user_id, 'timezone': timezone}
+    response = requests.put(url=url, data=data).json()
+    return response
 
 
 def get_quiz_question_list() -> dict:
@@ -99,15 +94,8 @@ def get_id_and_day_num_list() -> List[dict]:
     return cleared_response
 
 
-def set_marathon_completed(user_id: str, marathon_completed: bool = True):
-    url = f'{BASE_URL}/bot_users'
-    param = {'user_id': user_id}
-    data = {'marathon_completed': marathon_completed}
-    response = requests.post(url=url, params=param, data=data)
-    return response, response.status_code
-
-
-user_id = '138405449'
-complete = set_marathon_completed(user_id=user_id)
-user = get_user(user_id=user_id)
-print(complete)
+def set_marathon_completed(user_id: str, completed: bool = True):
+    url = f'{BASE_URL}/upd-user-data/{user_id}/'
+    data = {'user_id': user_id, 'marathon_completed': completed}
+    response = requests.put(url=url, data=data).json()
+    return response

@@ -26,7 +26,7 @@ class User(models.Model):
         auto_now_add=True,
         verbose_name='Registration date',
         help_text='Дата первой активации бота')
-    timezone = models.CharField(max_length=10, help_text='Часовой пояс пользователя')
+    timezone = models.CharField(max_length=10, help_text='Часовой пояс пользователя', default='UTC')
     marathon_completed = models.BooleanField(help_text='Статус завершения марафона', default=False)
 
     def __str__(self):
