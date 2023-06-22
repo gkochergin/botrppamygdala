@@ -18,21 +18,21 @@ from quiz import eating_habbits, check_hunger
 # )
 
 
-# назначаем диспетчер, он же коренной роутер
-dp = Dispatcher(storage=MemoryStorage())
-
-# создаем объект бота, передаем токен и режим парсинга
-bot = Bot(
-    token=config.tg_token.get_secret_value(),
-    parse_mode='HTML'
-)
-
-
 async def main():
     logging.basicConfig(
         level=logging.DEBUG, filename='logs/bot_debug.log',
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
     )
+
+    # назначаем диспетчер, он же коренной роутер
+    dp = Dispatcher(storage=MemoryStorage())
+
+    # создаем объект бота, передаем токен и режим парсинга
+    bot = Bot(
+        token=config.tg_token.get_secret_value(),
+        parse_mode='HTML'
+    )
+
     print('\n', await bot.get_me(), '\n')
     dp.include_router(handlers.router)
     dp.include_router(daily_tasks.router)

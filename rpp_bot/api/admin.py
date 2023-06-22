@@ -11,7 +11,7 @@ admin.site.register(QuizQuestions)
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['day', 'ordinal_number', 'message_type', 'content_type', 'short_name', 'content']
+    list_display = ['day', 'ordinal_number', 'message_type', 'short_name', 'content']
     readonly_fields = ['button_name', 'button_callback']
     list_editable = ['ordinal_number', 'message_type']
     list_filter = ['day', 'content_type']

@@ -64,9 +64,9 @@ class Message(models.Model):
 
     MESSAGE_TYPES = [
         (ARTICLE, f'{emoji.emojize(":open_book:")} Статья'),
-        (LECTURE, f'{emoji.emojize(":television:")} Лекция'),
-        (MEDITATION, f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'),
-        (WORKOUT, f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'),
+        (LECTURE, f'{emoji.emojize(":television:")} Лекция'),  # Лекция
+        (MEDITATION, f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'),  # Медитация
+        (WORKOUT, f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'),  # Упражнение
     ]
 
     # day 0 - это все сообщения за первый интро день, day 12 - то сообщения за последний день аутро
@@ -84,7 +84,8 @@ class Message(models.Model):
         name = ''
         for t in self.MESSAGE_TYPES:
             if self.message_type in t:
-                name = t[1]
+                emj, _ = t[1].split(" ")
+                name = ' '.join([emj, self.short_name])
         prefix = self.message_type
         suffix = self.ordinal_number
         callback: str = ':'.join([str(prefix), str(suffix)])

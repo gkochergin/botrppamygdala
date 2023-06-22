@@ -104,8 +104,6 @@ async def split_text_and_get_markup(response: list, ds=data_storage):
 @router.message(F.text.in_(data_storage.btn_days_list))
 async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1,
                                          ds=data_storage):
-    print('day_num ?', day_num)
-
     if day_num > -1:
         ds.selected_day = day_num
     else:
