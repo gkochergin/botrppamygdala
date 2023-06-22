@@ -24,7 +24,7 @@ class UserApiView(ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.query_params.get('filter_by_days'):
-            days_count = int(self.request.query_params.get('day_number'))
+            days_count = (self.request.query_params.get('day_number'))
             filtered_queryset = User.objects.filter(day_number=days_count)
             print("api.py >", "get_queryset >", "days_count >", days_count)
             return filtered_queryset
