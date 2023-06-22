@@ -4,7 +4,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from rpp_bot.core.config_reader import config
 import handlers
-import daily_tasks
 from quiz import eating_habbits, check_hunger
 
 # инициализация sentry
@@ -33,7 +32,12 @@ async def main():
         parse_mode='HTML'
     )
 
-    print('\n', await bot.get_me(), '\n')
+    # логируем факт подключения бота к серверу телеграм
+    log_text = f"\n {await bot.get_me()} \n"
+    logging.info(msg=log_text)
+    print(log_text)
+
+    # регистрируем роутеры из других модулей
     dp.include_router(handlers.router)
     dp.include_routers(eating_habbits.router, check_hunger.router)
 
