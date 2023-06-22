@@ -109,6 +109,3 @@ def get_users_by_days(filter_by_days: bool = True):
     response = requests.get(url=url, params=param).json
     return response
 
-
-a = get_users_by_days()
-print(a)

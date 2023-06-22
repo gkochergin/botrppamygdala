@@ -6,7 +6,6 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 from typing import List
 
-
 import rpp_bot.bot.api as api
 import tools as tls
 import keyboards as kb
@@ -59,7 +58,6 @@ async def command_start_handler(message: types.Message) -> None:
     api.record_sent_message_event(user_id=message.from_user.id, message_id=1, sent_at=datetime.now())
 
 
-
 @router.message(Command(commands=['admindays']))
 async def command_day_handler(message: types.Message, ds=data_storage) -> None:
     await message.answer('Выберите нужный день',
@@ -102,9 +100,12 @@ async def split_text_and_get_markup(response: list, ds=data_storage):
 
 """
 
+
 @router.message(F.text.in_(data_storage.btn_days_list))
-async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1, ds=data_storage):
+async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1,
+                                         ds=data_storage):
     print('day_num ?', day_num)
+
     if day_num > -1:
         ds.selected_day = day_num
     else:
@@ -117,7 +118,8 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None
     if chat_id == -1:
         await message.answer(text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
     else:
-        await bot.send_message(chat_id=chat_id, text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
+        await bot.send_message(chat_id=chat_id, text=today_tasks.daily_greeting_template,
+                               reply_markup=today_tasks.get_daily_keyboard())
 
     @router.callback_query(F.data.in_(data_storage.callback_match_list))
     async def process_message_types_callbacks(callback: types.CallbackQuery, ds=data_storage):
