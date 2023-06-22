@@ -14,22 +14,19 @@ from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizRe
 
 class UserApiView(ListCreateAPIView):
     queryset = User.objects.annotate(
-        day_number=Cast(
-            ExpressionWrapper(timezone.now() - F('reg_date'), output_field=DurationField()) / (1000000 * 60 * 60 * 24),
-            IntegerField()
-        )
+        day_number=ExpressionWrapper(timezone.now() - F('reg_date'), output_field=DurationField())
     )
 
     serializer_class = UserSerializer
 
     def get_queryset(self):
         if self.request.query_params.get('filter_by_days'):
-            days_count = (self.request.query_params.get('day_number'))
-            filtered_queryset = User.objects.filter(day_number=days_count)
-            print("api.py >", "get_queryset >", "days_count >", days_count)
+            max_day_number = 12
+            filtered_queryset = self.queryset.filter(day_number__gte=timezone.timedelta(days=max_day_number))
+            print("api.py >", "get_queryset >", "days_count >", filtered_queryset)
             return filtered_queryset
         else:
-            super().get_queryset()
+            return super().get_queryset()
 
 
 class UserUpdateApiView(generics.UpdateAPIView):

@@ -103,6 +103,7 @@ def set_marathon_completed(user_id: str, completed: bool = True):
 
 
 def get_users_by_days(filter_by_days: bool = True):
+    # получаем список всех пользователей, где days_after_reg_date >= 13
     url = f'{BASE_URL}/bot-users'
     param = {'filter_by_days': filter_by_days}
     response = requests.get(url=url, params=param).json
