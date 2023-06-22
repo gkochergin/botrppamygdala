@@ -17,8 +17,8 @@ class UserMessageSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    button_name = serializers.ReadOnlyField(source='button_name')
-    button_callback = serializers.CharField(source='button_callback')
+    button_name = serializers.ReadOnlyField()
+    button_callback = serializers.CharField()
 
     class Meta:
         model = Message
