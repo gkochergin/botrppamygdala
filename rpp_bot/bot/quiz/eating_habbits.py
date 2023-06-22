@@ -4,7 +4,7 @@ from aiogram import Router, types, F
 from aiogram.filters import Command
 
 import rpp_bot.bot.api as api
-
+import rpp_bot.bot.tools as tls
 from rpp_bot.bot import keyboards as kb
 
 router = Router()
@@ -33,7 +33,7 @@ class QuizSession:
         self.__field_name = 'question'
         self.finished = False
         self.result_analyze = f"Это был список <b>Признаков нарушенного пищевого поведения</b>. Давай разберём твой " \
-                              f"результат. Ты ответила \"Да\":"
+                              f"результат: ты ответила \"Да\""
 
     def add_one_to_score(self) -> None:
         """
@@ -150,7 +150,9 @@ async def process_callback(callback_query: types.CallbackQuery):
         # Send the result message if the quiz is not finished
         if not USER_SESSION.finished:
             await callback_query.message.answer(
-                f"{USER_SESSION.result_analyze} <b>{USER_SESSION.score}</b>\n\n{result_text}")
+                f"{USER_SESSION.result_analyze} <b>{USER_SESSION.score}</b> "
+                f"{tls.matching_word_numeral(wrd='раз', dgt=USER_SESSION.score)}.\n\n"
+                f"{result_text}")
 
         # Save the user's quiz result and mark the quiz as finished
         USER_SESSION.save_quiz_result()

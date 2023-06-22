@@ -78,17 +78,26 @@ class Message(models.Model):
     content_type = models.CharField(max_length=3, choices=CONTENT_TYPES, default=TEXT)
     message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default=ARTICLE)
     content = models.TextField()
-    short_name = models.CharField(max_length=15, default=None, help_text="Короткое название, не более 15 символов, появится справа от кнопки")
+    short_name = models.CharField(max_length=40, default=None, help_text="Короткое название (40 символов), появится справа от emoji")
 
     def generate_button_data(self):
+        # генерируем название для кнопок
         name = ''
-        for t in self.MESSAGE_TYPES:
-            if self.message_type in t:
-                emj, _ = t[1].split(" ")
-                name = ' '.join([emj, self.short_name])
+        if self.short_name:
+            for t in self.MESSAGE_TYPES:
+                if self.message_type in t:
+                    emj, _ = t[1].split(" ")
+                    name = ' '.join([emj, self.short_name])
+        else:
+            for t in self.MESSAGE_TYPES:
+                if self.message_type in t:
+                    name = t[1]
+
+        # Создаем коллбек
         prefix = self.message_type
         suffix = self.ordinal_number
         callback: str = ':'.join([str(prefix), str(suffix)])
+
         return name, callback.lower()
 
     @property

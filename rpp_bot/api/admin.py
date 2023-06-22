@@ -13,7 +13,7 @@ admin.site.register(QuizQuestions)
 class MessageAdmin(admin.ModelAdmin):
     list_display = ['day', 'ordinal_number', 'message_type', 'short_name', 'content']
     readonly_fields = ['button_name', 'button_callback']
-    list_editable = ['ordinal_number', 'message_type']
+    list_editable = ['ordinal_number', 'message_type', 'short_name']
     list_filter = ['day', 'content_type']
 
     @admin.display(description='Tokens')
