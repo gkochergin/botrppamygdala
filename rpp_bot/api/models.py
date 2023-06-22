@@ -78,6 +78,7 @@ class Message(models.Model):
     content_type = models.CharField(max_length=3, choices=CONTENT_TYPES, default=TEXT)
     message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default=ARTICLE)
     content = models.TextField()
+    short_name = models.CharField(max_length=15, default=None, help_text="Короткое название, не более 15 символов, появится справа от кнопки")
 
     def generate_button_data(self):
         name = ''
