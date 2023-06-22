@@ -2,17 +2,31 @@ import dataclasses
 from datetime import datetime
 from aiogram import Router, types, F, Bot
 from aiogram.filters import Command
-from aiogram.filters.callback_data import CallbackData
-from aiogram.fsm.context import FSMContext
 from typing import List
 
-import rpp_bot.bot.api as api
+from rpp_bot.bot import api
 import tools as tls
 import keyboards as kb
-from daily_tasks import DailyTasks
 
 # назначаем роутер
 router = Router()
+
+
+class DailyTasks:
+    def __init__(self, day_num: int, user_first_name: str):
+        # day_num передается в бд для получения всех записей за этот день
+        self.day_num = day_num
+        self.tasks = api.get_messages_by_day(day_num)  # список заданий этого дня
+        self.tasks_count = len(self.tasks)
+        self.daily_greeting_template = f"{user_first_name.strip()}, приветствую тебя на {self.day_num} " \
+                                       f"дне нашего марафона. Под этим сообщением есть {self.tasks_count} " \
+                                       f"{tls.matching_word_numeral(wrd='кнопка', dgt=self.tasks_count)} " \
+                                       f"с твоими лекциями и заданиями. Давай начинать!"
+
+    def get_daily_keyboard(self):
+        btns_data = api.get_daily_buttons_data(self.day_num)
+        markup = kb.make_inline_kb(buttons_data=btns_data, sizes=[1, ])
+        return markup
 
 
 @dataclasses.dataclass

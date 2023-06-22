@@ -1,5 +1,6 @@
 from typing import List
 import re
+import pymorphy2
 
 
 def error_logger(func):
@@ -12,6 +13,14 @@ def error_logger(func):
             raise
 
     return wrapper
+
+
+def matching_word_numeral(wrd: str, dgt: int):
+    # Согласование слов с числительными
+    # https://pymorphy2.readthedocs.io/en/latest/user/guide.html#id8
+    morph = pymorphy2.MorphAnalyzer()
+    word_parse = morph.parse(wrd)[0]
+    return word_parse.make_agree_with_number(dgt).word
 
 
 def split_text_to_parts(text: str, part_length: int):
