@@ -102,5 +102,12 @@ def set_marathon_completed(user_id: str, completed: bool = True):
     return response
 
 
-a = get_id_and_day_num_list()
+def get_users_by_days(filter_by_days: bool = True):
+    url = f'{BASE_URL}/bot-users'
+    param = {'filter_by_days': filter_by_days}
+    response = requests.get(url=url, params=param).json
+    return response
+
+
+a = get_users_by_days()
 print(a)

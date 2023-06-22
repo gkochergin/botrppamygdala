@@ -3,11 +3,10 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
-    days_after_reg_date = serializers.ReadOnlyField()
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = [f.name for f in User._meta.fields] + ['days_after_reg_date']
 
 
 class UserMessageSerializer(serializers.ModelSerializer):

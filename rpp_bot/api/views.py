@@ -1,3 +1,6 @@
+from django.db.models import ExpressionWrapper, F, DurationField, IntegerField
+from django.db.models.functions import Cast
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
@@ -10,8 +13,23 @@ from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizRe
 
 
 class UserApiView(ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.annotate(
+        day_number=Cast(
+            ExpressionWrapper(timezone.now() - F('reg_date'), output_field=DurationField()) / (1000000 * 60 * 60 * 24),
+            IntegerField()
+        )
+    )
+
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        if self.request.query_params.get('filter_by_days'):
+            days_count = int(self.request.query_params.get('day_number'))
+            filtered_queryset = User.objects.filter(day_number=days_count)
+            print("api.py >", "get_queryset >", "days_count >", days_count)
+            return filtered_queryset
+        else:
+            super().get_queryset()
 
 
 class UserUpdateApiView(generics.UpdateAPIView):
