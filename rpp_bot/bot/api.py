@@ -102,5 +102,5 @@ def set_marathon_completed(user_id: str, completed: bool = True):
     return response
 
 
-print(get_buttons_callback(day=3))
-print(get_id_and_day_num_list)
+a = get_id_and_day_num_list()
+print(a)

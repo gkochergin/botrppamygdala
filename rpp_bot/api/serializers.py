@@ -1,44 +1,43 @@
 from .models import User, UserMessage, Message, BotAdmins, QuizQuestions, QuizResults
-from rest_framework.serializers import ModelSerializer
-from rest_framework.serializers import CharField, IntegerField
+from rest_framework import serializers
 
 
-class UserSerializer(ModelSerializer):
-    days_after_reg_date = IntegerField()
+class UserSerializer(serializers.ModelSerializer):
+    days_after_reg_date = serializers.ReadOnlyField()
 
     class Meta:
         model = User
-        fields = "__all__"
+        fields = '__all__'
 
 
-class UserMessageSerializer(ModelSerializer):
+class UserMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMessage
         fields = "__all__"
 
 
-class MessageSerializer(ModelSerializer):
-    button_name = CharField()
-    button_callback = CharField()
+class MessageSerializer(serializers.ModelSerializer):
+    button_name = serializers.ReadOnlyField(source='button_name')
+    button_callback = serializers.CharField(source='button_callback')
 
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = '__all__'
 
 
-class BotAdminsSerializer(ModelSerializer):
+class BotAdminsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BotAdmins
-        fields = "__all__"
+        fields = '__all__'
 
 
-class QuizQuestionsSerializer(ModelSerializer):
+class QuizQuestionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizQuestions
-        fields = "__all__"
+        fields = '__all__'
 
 
-class QuizResultsSerializer(ModelSerializer):
+class QuizResultsSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizResults
-        fields = "__all__"
+        fields = '__all__'
