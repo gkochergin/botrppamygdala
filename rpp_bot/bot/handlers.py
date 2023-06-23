@@ -122,11 +122,8 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None
         ds.selected_day = day_num
     else:
         ds.selected_day = int(message.text.removeprefix("Day "))
-    print(ds.selected_day)
     ds.callback_match_list = api.get_buttons_callback(ds.selected_day)
-    print(ds.callback_match_list)
     today_tasks = DailyTasks(day_num=ds.selected_day, user_first_name=message.from_user.first_name)
-    print('bot >', bot)
     if chat_id == -1:
         await message.answer(text=today_tasks.daily_greeting_template, reply_markup=today_tasks.get_daily_keyboard())
     else:

@@ -10,7 +10,6 @@ def create_user(user_id: int, chat_id: int, username: str, timezone: str):
     url = f'{BASE_URL}/bot-users'
     user_data = {'user_id': user_id, 'chat_id': chat_id, 'username': username, 'timezone': timezone}
     requests.post(url=url, data=user_data)
-
     return 'Событие Create User завершено.'
 
 
@@ -18,7 +17,7 @@ def get_user_by_id(user_id: str):
     url = f'{BASE_URL}/bot-users'
     user_data = {'user_id': user_id}
     get_user = requests.get(url=url, data=user_data).json()
-    print(get_user_by_id.__module__, '>', get_user_by_id.__name__, f'> Событие Get User для user id: {user_id} завершено.')
+    # print(get_user_by_id.__module__, '>', get_user_by_id.__name__, f'> Событие Get User для user id: {user_id} завершено.')
     return get_user
 
 
@@ -43,9 +42,6 @@ def get_daily_buttons_data(day: int):
     btn_data = [
         {'name': item['button_name'], 'data': item['button_callback']} for item in response
     ]
-
-    print(get_buttons_callback.__name__, ">", 'btn_data', ">", btn_data, '\n')
-
     return btn_data
 
 
@@ -53,7 +49,6 @@ def get_buttons_callback(day: int):
     url = f'{BASE_URL}/messages'
     param = {'day': day}
     response = requests.get(url=url, params=param).json()
-    print(response)
     callbacks = [item['button_callback'] for item in response]
     return callbacks
 
