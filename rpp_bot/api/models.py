@@ -39,7 +39,6 @@ class User(models.Model):
         return number_of_days
 
 
-
 class Message(models.Model):
     # content types
     TEXT = 'TXT'
@@ -61,12 +60,14 @@ class Message(models.Model):
     MEDITATION = 'MEDITATION'
     WORKOUT = 'WORKOUT'
     LECTURE = 'LECTURE'
+    QUIZ = 'QUIZ'
 
     MESSAGE_TYPES = [
         (ARTICLE, f'{emoji.emojize(":open_book:")} Статья'),
         (LECTURE, f'{emoji.emojize(":television:")} Лекция'),  # Лекция
         (MEDITATION, f'{emoji.emojize(":woman_in_lotus_position:")} Медитация'),  # Медитация
         (WORKOUT, f'{emoji.emojize(":woman_lifting_weights:")} Упражнение'),  # Упражнение
+        (QUIZ, f'{emoji.emojize(":check_mark_button:")} Тест'),  # Упражнение
     ]
 
     # day 0 - это все сообщения за первый интро день, day 12 - то сообщения за последний день аутро
