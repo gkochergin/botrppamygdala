@@ -3,7 +3,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from rpp_bot.bot import handlers as hand
+from rpp_bot.bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days
 from rpp_bot.core.config_reader import config
 
 # инициализация sentry
@@ -38,8 +38,12 @@ async def main():
     print(log_text)
 
     # регистрируем роутеры из других модулей
-    dp.include_router()
-    dp.include_routers(eating_habbits.router, check_hunger.router)
+    dp.include_routers(
+        handlers_admin.router,
+        handlers_days.router,
+        eating_habits.router,
+        check_hunger.router
+    )
 
     # Запускаем бота и пропускаем все накопленные входящие
     await bot.delete_webhook(drop_pending_updates=True)

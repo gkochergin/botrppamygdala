@@ -80,7 +80,7 @@ class QuizSession:
 USER_SESSION: QuizSession
 
 
-@router.message(Command(commands='myhabbits'))
+@router.message(Command(commands='myhabits'))
 async def start_quiz(message: types.Message):
     """
     Start a quiz session for the user.
@@ -88,6 +88,7 @@ async def start_quiz(message: types.Message):
     :param message: The message object representing the user's message.
     """
     global USER_SESSION
+    log_text = f'User {message.from_user.id} > started EATING HABITS quiz.'
 
     # Initialize the user's quiz session
     USER_SESSION = QuizSession(user_id=str(message.from_user.id), question_number=0, score=0)
