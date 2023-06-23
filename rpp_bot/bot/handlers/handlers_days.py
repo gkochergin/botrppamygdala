@@ -53,6 +53,34 @@ class DataStorage:
 data_storage = DataStorage()
 
 
+async def split_text_and_get_markup(response: list, ds=data_storage):
+    # если ответ сервера (aka response) не пустой, то обрабатываем по логике
+    if response:
+        # превращаем ответ сервера в строку
+        response_string = tls.convert_response_dict_to_string([response])
+
+        # разбиваем строку на элементы определенной длины
+        ds.text_parts_list = tls.split_text_to_parts(text=response_string, part_length=800)
+
+        # выбираем кусок текста и форматируем сообщение для отправки
+        if len(ds.text_parts_list) == 1:
+            # если в тексте всего 1 кусок, то просто отправляем текст, без клавиатуры
+            message_text = ds.text_parts_list[0]
+            return message_text, None
+        else:
+            # Если в тексте более 1 куска, то просто отправляем первый кусок текста
+            # с клавиатурой "вперёд-назад", т.е. читать дальше или вернуться назад
+            ds.text_part_num = 0
+            message_text = ds.text_parts_list[
+                               ds.text_part_num] + f"\n\nСтраница {1} из {len(ds.text_parts_list)}"
+            markup = ds.kb_back_next
+            return message_text, markup
+    else:
+        # если ответ сервера (aka response) пустой, то сообщаем об этом и больше ничего
+        message_text = "Сообщений за этот день не найдено"
+        return message_text, None
+
+
 @router.message(Command(commands=["start"]))
 async def command_start_handler(message: types.Message) -> None:
     # Creating new user in db, skip if already exists
@@ -82,27 +110,7 @@ async def command_day_handler(message: types.Message, ds=data_storage) -> None:
                          )
 
 
-async def split_text_and_get_markup(response: list, ds=data_storage):
-    if response:
-        # превращаем ответ сервера в строку
-        response_string = tls.convert_response_dict_to_string([response])
 
-        # разбиваем строку на элементы определенной длины
-        ds.text_parts_list = tls.split_text_to_parts(text=response_string, part_length=800)
-
-        # выбираем первый кусок текста и форматируем сообщение для отправки
-        if len(ds.text_parts_list) == 1:
-            message_text = ds.text_parts_list[0]
-            return message_text, None
-        else:
-            ds.text_part_num = 0
-            message_text = ds.text_parts_list[
-                               ds.text_part_num] + f"\n\nСтраница {1} из {len(ds.text_parts_list)}"
-            markup = ds.kb_back_next
-            return message_text, markup
-    else:
-        message_text = "Сообщений за этот день не найдено"
-        return message_text, None
 
 
 """

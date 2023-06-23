@@ -10,6 +10,8 @@ from rpp_bot.bot import keyboards as kb
 router = Router()
 
 
+# ------------------------------ QUIZ EATING HABITS HANDLERS ------------------------------ #
+
 class QuizSession:
     """
     A class representing a quiz session for a user.

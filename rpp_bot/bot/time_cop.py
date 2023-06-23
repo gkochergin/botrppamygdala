@@ -5,8 +5,6 @@
 Процесс инициирует поочередно отправку заданий пользователям
 
 """
-from rpp_bot.bot import api
-from rpp_bot.bot.handlers import get_day_tasks_and_sent_to_user
 # from rpp_bot.bot.main import bot
 #
 #

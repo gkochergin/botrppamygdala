@@ -1,4 +1,4 @@
-import logging as log
+import logging
 from aiogram import Router, types, F
 from aiogram.filters import Command
 
@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 router = Router()
 
+# ------------------------------ QUIZ CHECK HUNGER HANDLERS ------------------------------ #
 
 @dataclass
 class MyHunger:
@@ -26,6 +27,8 @@ class MyHunger:
 
 @router.message(Command(commands='myhunger'))
 async def start_hunger_test(message: types.Message):
+    log_text = f'User {message.from_user.id} > started CHECK HUNGER quiz.'
+    logging.info(msg=log_text)
     mhs = MyHunger()
     # Сообщаем пользователю, что тест начат
     await message.answer(
@@ -44,3 +47,5 @@ async def process_callback(callback: types.CallbackQuery):
             text=f"{MyHunger.name}\n\n{MyHunger.stomach_result}",
             reply_markup=None)
     await callback.answer(show_alert=False)
+    log_text = f'User {callback.from_user.id} > finished CHECK HUNGER quiz.'
+    logging.info(msg=log_text)

@@ -2,9 +2,9 @@ import logging
 import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
+
+from rpp_bot.bot import handlers as hand
 from rpp_bot.core.config_reader import config
-import handlers
-from quiz import eating_habbits, check_hunger
 
 # инициализация sentry
 # sentry_sdk.init(
@@ -38,7 +38,7 @@ async def main():
     print(log_text)
 
     # регистрируем роутеры из других модулей
-    dp.include_router(handlers.router)
+    dp.include_router()
     dp.include_routers(eating_habbits.router, check_hunger.router)
 
     # Запускаем бота и пропускаем все накопленные входящие
