@@ -142,7 +142,7 @@ async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None
             message_text, markup = await split_text_and_get_markup(ds.today.tasks[int(message_num) - 1])
             await callback.message.answer(text=message_text, reply_markup=markup)
             await callback.answer(show_alert=False)
-        elif message_type in ['meditation', 'workout', 'lecture']:
+        elif message_type in ['meditation', 'workout', 'lecture', 'quiz']:
             await callback.message.answer(text=ds.today.tasks[int(message_num) - 1]['content'],
                                           reply_markup=None)
 

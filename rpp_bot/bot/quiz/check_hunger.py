@@ -24,7 +24,6 @@ class MyHunger:
                 {'name': self.stomach_name, 'data': self.stomach_data}]
         return kb.make_inline_kb(buttons_data=btns)
 
-
 @router.message(Command(commands='myhunger'))
 async def start_hunger_test(message: types.Message):
     mhs = MyHunger()

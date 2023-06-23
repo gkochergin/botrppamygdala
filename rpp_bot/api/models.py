@@ -116,7 +116,7 @@ class Message(models.Model):
 
 
 class UserMessage(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Telegram ID')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User')
     message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
     sent_at = models.DateTimeField(
         verbose_name='Sending date & time',
