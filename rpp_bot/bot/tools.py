@@ -130,23 +130,6 @@ def extract_strings_by_regexp(text: str):
     return sentences
 
 
-lorem_ipsum = "\nMessage 1 at day 3. Very very long content with lorem ipsum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nAliquam ultrices sagittis orci a. Sit amet commodo nulla facilisi. Eu turpis egestas pretium aenean pharetra magna. Nunc sed augue lacus viverra vitae congue eu consequat.\nDolor magna eget est lorem ipsum dolor sit amet consectetur. Sed vulputate mi sit amet. Fringilla ut morbi tincidunt augue interdum velit euismod in. Diam volutpat commodo sed egestas. Amet luctus venenatis lectus magna fringilla urna porttitor rhoncus dolor. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Fringilla ut morbi tincidunt augue interdum. Eget nunc scelerisque viverra mauris in.\n"
-
-# response = api.get_messages_by_day(day=1)
-# print("RESPONSE:\n",response,'\n')
-# a = convert_response_dict_to_string(response)
-# b = split_text_to_parts(a, part_length=800)
-# print("TEXT SPLITTED TO PARTS WITH MAX_LENGTH 800:",b,'\n')
-#
-# for i in b:
-#     print(f'Text block length: {len(i)}\n')
-#
-# print('\n----------------------------------------\n')
-#
-# for i in b:
-#     print(i)
-
-
 def record_message_event(func):
     def wrapper(*args, **kwargs):
         try:

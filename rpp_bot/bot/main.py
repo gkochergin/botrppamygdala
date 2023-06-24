@@ -3,6 +3,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from rpp_bot.bot import admin_utilities
 from rpp_bot.bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days
 from rpp_bot.core.config_reader import config
 
@@ -39,6 +40,7 @@ async def main():
 
     # регистрируем роутеры из других модулей
     dp.include_routers(
+        admin_utilities.router,
         handlers_admin.router,
         handlers_days.router,
         eating_habits.router,

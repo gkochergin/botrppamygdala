@@ -4,6 +4,7 @@ from aiogram import Router, types, F, Bot
 from aiogram.filters import Command
 from typing import List
 
+from ..admin_utilities import admin_access
 from ..api import get_messages_by_day, get_daily_buttons_data, get_buttons_callback, create_user, \
     record_sent_message_event
 from ..tools import matching_word_numeral, convert_response_dict_to_string, split_text_to_parts
@@ -113,6 +114,7 @@ async def command_start_handler(message: types.Message) -> None:
 
 
 @router.message(F.text.in_(data_storage.btn_days_list))
+@admin_access
 async def get_day_tasks_and_sent_to_user(message: types.Message, bot: Bot = None, chat_id: int = -1, day_num: int = -1,
                                          ds=data_storage):
     if day_num > -1:
