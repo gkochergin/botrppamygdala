@@ -9,15 +9,27 @@ import emoji
 
 router = Router()
 
+# TODO: Реализовать расчеты, поднять модели для хранения, сериализаторы и post-get запросы
+"""
+ТАБЛИЦА: MealNow
+user_id: связь с таблицей User
+day: дата записи
+тип еды [N]: нет/да или 0/1
+
+Таблица: MealAllDays
+user: связь с таблицей User
+day: дата записи
+тип еды [N] результат: сумма выборки за конкретную дату этого типа еды [N] для записей в таблице MealNow
+"""
 
 @dataclasses.dataclass
-class MealDayData:
+class MealAllDayData:
     datetime = datetime.now()
     meal_type = {'main_meal': 'Основной приём', 'snack': 'Перекус', 'end_date': 'Завершить день'}
     messages = {
         'choose_type': 'Выберите тип приёма пищи, который вы хотите записать:',
         'main_meal': 'Вы выбрали <b>основной приём пищи</b>. Отметьте всё, что вы ели по категориям ниже.',
-        'snack': 'Вы выбрали основной <b>перекус</b>. Отметьте всё, что вы ели по категориям ниже.',
+        'snack': 'Вы выбрали <b>перекус</b>. Отметьте всё, что вы ели по категориям ниже.',
         'end_date_approval': 'Вы уверены, что хотите завершить день? После этого вы не сможете больше добавить приемы пищи.',
         'end_date_saved': 'Окей, все приемы пищи (основные и перекусы) записаны. Вот ваша статистка.',
         'end_date_cancel': 'Окей, ничего не делаем.',
@@ -41,7 +53,7 @@ class MealDayData:
 
 @dataclasses.dataclass
 class MealNowData:
-    message_text = "Что жрали-с господа?"
+    message_text = "С помощью кнопок ниже, выберите те виды/типы продуктов, которые вы съели."
     kb_products_data = [
         {'name': f'{emoji.emojize(string=":hamburger:")} Булочко', 'data': 'bakery'},
         {'name': f'{emoji.emojize(string=":cut_of_meat:")} Мяско', 'data': 'meat'},
@@ -55,7 +67,7 @@ class MealNowData:
     removed_buttons_list = []
 
 
-meal_day = MealDayData()
+meal_day = MealAllDayData()
 meal_now = MealNowData()
 
 
@@ -130,7 +142,7 @@ async def meal_now_callbacks_process(callback: CallbackQuery):
         meal_now.removed_buttons_list = []
     else:
         await callback.message.edit_text(
-            text=f"Прекрасно! Очень важно кушать <b>{callback.data}</b>",
+            text=f"Прекрасно! Очень важно кушать <b>{callback.data}</b>. Что-то ещё?",
             reply_markup=filtered_keyboard
         )
     await callback.answer(show_alert=False)
