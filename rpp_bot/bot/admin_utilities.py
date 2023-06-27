@@ -11,7 +11,7 @@ from aiogram.filters import Command
 router = Router()
 
 admin_ids = [138405449]
-
+# TODO: убрать список айдишников отсюда и заменить их на получение списка из бд django
 
 def admin_access(func):
     print(func)

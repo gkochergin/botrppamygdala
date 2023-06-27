@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from rpp_bot.bot import admin_utilities
-from rpp_bot.bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days
+from rpp_bot.bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days, harvard
 from rpp_bot.core.config_reader import config
 
 # инициализация sentry
@@ -17,6 +17,8 @@ from rpp_bot.core.config_reader import config
 #     traces_sample_rate=1.0
 # )
 
+
+# TODO: Добавить в код формирование меню бота через вызов соответствущей функции _set_bot_menu
 
 async def main():
     logging.basicConfig(
@@ -44,7 +46,8 @@ async def main():
         handlers_admin.router,
         handlers_days.router,
         eating_habits.router,
-        check_hunger.router
+        check_hunger.router,
+        harvard.router
     )
 
     # Запускаем бота и пропускаем все накопленные входящие
