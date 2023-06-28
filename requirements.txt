@@ -6,7 +6,7 @@ django-debug-toolbar
 django-extensions
 mysqlclient==2.1.1
 # aiogram module from dev-3.x branch
-aiogram~=3.0.0b8
+https://github.com/aiogram/aiogram/archive/refs/heads/dev-3.x.zip
 djangorestframework~=3.14.0
 SQLAlchemy==2.0.16
 requests~=2.31.0
