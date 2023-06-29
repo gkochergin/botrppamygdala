@@ -26,7 +26,7 @@ SECRET_KEY = cr.config.django_secret_key.get_secret_value()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = cr.config.django_debug
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = cr.config.django_allowed_hosts
 
 
 # Application definition
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'django_extensions',
-    'debug_toolbar',
     'rest_framework',
 
 ]
@@ -53,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
