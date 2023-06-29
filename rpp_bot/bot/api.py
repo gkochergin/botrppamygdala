@@ -1,6 +1,4 @@
 import requests
-from datetime import datetime
-import json
 from typing import List
 
 BASE_URL = 'http://localhost:8000/api/v1'
