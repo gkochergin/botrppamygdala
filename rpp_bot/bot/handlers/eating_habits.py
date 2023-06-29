@@ -3,9 +3,10 @@ from datetime import datetime
 from aiogram import Router, types, F
 from aiogram.filters import Command
 
-import rpp_bot.bot.api as api
-import rpp_bot.bot.tools as tls
-from rpp_bot.bot import keyboards as kb
+from .. import api
+from .. import tools as tls
+from .. import keyboards as kb
+
 
 router = Router()
 
