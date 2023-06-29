@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from rpp_bot.core.config_reader import config
+from rpp_bot.config_reader import config
 
 
 class Command(BaseCommand):
