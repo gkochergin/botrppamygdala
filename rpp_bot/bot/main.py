@@ -1,3 +1,4 @@
+import sys
 import logging
 import asyncio
 from aiogram import Bot, Dispatcher
@@ -18,7 +19,7 @@ from admin_utils import admin_utilities
 #     traces_sample_rate=1.0
 # )
 
-
+# sys.path.append("$HOME/Deploy/rpp_bot:$PYTHONPATH")
 # TODO: Добавить в код формирование меню бота через вызов соответствущей функции _set_bot_menu
 
 async def main():
