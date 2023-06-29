@@ -8,9 +8,9 @@ class Settings(BaseSettings):
     db_user: SecretStr
     db_host: SecretStr
     db_name: SecretStr
-    admin_id: SecretStr
     sentry_dsn: SecretStr
     django_secret_key: SecretStr
+    django_debug: bool
 
     class Config:
         # Имя файла, откуда будут прочитаны данные

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = cr.config.django_secret_key.get_secret_value()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = cr.config.django_debug
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
