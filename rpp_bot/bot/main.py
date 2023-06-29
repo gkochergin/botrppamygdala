@@ -3,9 +3,9 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from rpp_bot.bot import admin_utilities
-from rpp_bot.bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days, harvard
-from rpp_bot.core.config_reader import config
+from ..bot import admin_utilities
+from ..bot.handlers import check_hunger, eating_habits, handlers_admin, handlers_days, harvard
+from ..core.config_reader import config
 
 # инициализация sentry
 # sentry_sdk.init(
