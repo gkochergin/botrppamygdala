@@ -1,5 +1,6 @@
 from pydantic import BaseSettings, SecretStr
 
+
 class Settings(BaseSettings):
     # Вложенный класс с дополнительными указаниями для настроек конфиденциальных данных
     tg_token: SecretStr
