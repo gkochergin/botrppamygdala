@@ -1,5 +1,4 @@
 from pydantic import BaseSettings, SecretStr
-from typing import List
 
 class Settings(BaseSettings):
     # Вложенный класс с дополнительными указаниями для настроек конфиденциальных данных
@@ -11,7 +10,7 @@ class Settings(BaseSettings):
     sentry_dsn: SecretStr
     django_secret_key: SecretStr
     django_debug: bool
-    django_allowed_hosts: List[str]
+    django_allowed_hosts: list
 
     class Config:
         # Имя файла, откуда будут прочитаны данные
