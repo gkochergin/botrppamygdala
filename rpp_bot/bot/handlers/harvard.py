@@ -8,7 +8,7 @@ from aiogram.filters import Command
 
 import emoji
 
-from ..keyboards import make_inline_kb
+from rpp_bot.bot.keyboards.keyboards import make_inline_kb
 
 router = Router()
 

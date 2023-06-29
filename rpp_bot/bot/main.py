@@ -3,7 +3,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from config_reader import config
+from rpp_bot.configs.config_reader import config
 from handlers import check_hunger, eating_habits, handlers_admin, handlers_days, harvard
 from admin_utils import admin_utilities
 

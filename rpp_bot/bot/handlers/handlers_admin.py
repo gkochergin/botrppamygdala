@@ -1,9 +1,9 @@
 import logging
 from aiogram import Router, types
 from aiogram.filters import Command
-from .handlers_days import DataStorage
+from rpp_bot.bot.handlers.handlers_days import DataStorage
 from rpp_bot.bot.admin_utils.admin_utilities import admin_access
-from ..keyboards import make_row_keyboard
+from rpp_bot.bot.keyboards.keyboards import make_row_keyboard
 
 router = Router()
 

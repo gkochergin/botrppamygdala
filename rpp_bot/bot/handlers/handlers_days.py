@@ -5,10 +5,10 @@ from aiogram.filters import Command
 from typing import List
 
 from rpp_bot.bot.admin_utils.admin_utilities import admin_access
-from ..api import get_messages_by_day, get_daily_buttons_data, get_buttons_callback, create_user, \
+from rpp_bot.bot.api.api import get_messages_by_day, get_daily_buttons_data, get_buttons_callback, create_user, \
     record_sent_message_event
 from rpp_bot.bot.admin_utils.tools import matching_word_numeral, convert_response_dict_to_string, split_text_to_parts
-from ..keyboards import make_inline_kb
+from rpp_bot.bot.keyboards.keyboards import make_inline_kb
 
 # назначаем роутер
 router = Router()

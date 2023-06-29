@@ -1,9 +1,6 @@
 from aiogram.types import Message, CallbackQuery
 from aiogram import Router
-from aiogram.filters import Command
 
-import api
-from keyboards import make_inline_kb
 from typing import Union
 
 router = Router()
