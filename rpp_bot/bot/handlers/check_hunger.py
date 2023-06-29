@@ -1,9 +1,8 @@
 import logging
+from dataclasses import dataclass
 from aiogram import Router, types, F
 from aiogram.filters import Command
-
-from rpp_bot.bot import keyboards as kb
-from dataclasses import dataclass
+from .. import keyboards as kb
 
 router = Router()
 
