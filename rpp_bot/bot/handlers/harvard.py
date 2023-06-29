@@ -1,11 +1,14 @@
 import dataclasses
 from typing import List
 from datetime import datetime
+
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
-from rpp_bot.bot.keyboards import make_inline_kb
+
 import emoji
+
+from ..keyboards import make_inline_kb
 
 router = Router()
 
